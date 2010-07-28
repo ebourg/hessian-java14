@@ -58,7 +58,6 @@ import java.util.logging.Logger;
 import java.lang.annotation.Annotation;
 import java.lang.ref.SoftReference;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.management.*;
 
 /**
  * Factory for returning serialization methods.
