@@ -86,7 +86,7 @@ public class MapDeserializer extends AbstractMapDeserializer
             }
             catch (Exception e)
             {
-                throw new IllegalStateException(e);
+                throw (IllegalStateException) new IllegalStateException().initCause(e);
             }
         }
     }

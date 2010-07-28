@@ -55,7 +55,6 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.lang.ref.SoftReference;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.lang.ref.WeakReference;
@@ -90,8 +89,8 @@ public class ContextSerializerFactory
     private final HashMap _serializerClassMap
             = new HashMap();
 
-    private final ConcurrentHashMap _customSerializerMap
-            = new ConcurrentHashMap();
+    private final HashMap _customSerializerMap
+            = new HashMap();
 
     private final HashMap _serializerInterfaceMap
             = new HashMap();
@@ -102,8 +101,8 @@ public class ContextSerializerFactory
     private final HashMap _deserializerClassNameMap
             = new HashMap();
 
-    private final ConcurrentHashMap _customDeserializerMap
-            = new ConcurrentHashMap();
+    private final HashMap _customDeserializerMap
+            = new HashMap();
 
     private final HashMap _deserializerInterfaceMap
             = new HashMap();
@@ -189,7 +188,11 @@ public class ContextSerializerFactory
      */
     public Serializer getCustomSerializer(Class cl)
     {
-        Serializer serializer = (Serializer) _customSerializerMap.get(cl.getName());
+        Serializer serializer;
+        synchronized (_customSerializerMap)
+        {
+            serializer = (Serializer) _customSerializerMap.get(cl.getName());
+        }
 
         if (serializer == AbstractSerializer.NULL)
         {
@@ -207,7 +210,10 @@ public class ContextSerializerFactory
 
             Serializer ser = (Serializer) serClass.newInstance();
 
-            _customSerializerMap.put(cl.getName(), ser);
+            synchronized (_customSerializerMap)
+            {
+                _customSerializerMap.put(cl.getName(), ser);
+            }
 
             return ser;
         }
@@ -220,7 +226,10 @@ public class ContextSerializerFactory
             throw new HessianException(e);
         }
 
-        _customSerializerMap.put(cl.getName(), AbstractSerializer.NULL);
+        synchronized (_customSerializerMap)
+        {
+            _customSerializerMap.put(cl.getName(), AbstractSerializer.NULL);
+        }
 
         return null;
     }
@@ -250,7 +259,11 @@ public class ContextSerializerFactory
      */
     public Deserializer getCustomDeserializer(Class cl)
     {
-        Deserializer deserializer = (Deserializer) _customDeserializerMap.get(cl.getName());
+        Deserializer deserializer;
+        synchronized (_customDeserializerMap)
+        {
+            deserializer = (Deserializer) _customDeserializerMap.get(cl.getName());
+        }
 
         if (deserializer == AbstractDeserializer.NULL)
         {
@@ -268,7 +281,10 @@ public class ContextSerializerFactory
 
             Deserializer ser = (Deserializer) serClass.newInstance();
 
-            _customDeserializerMap.put(cl.getName(), ser);
+            synchronized (_customDeserializerMap)
+            {
+                _customDeserializerMap.put(cl.getName(), ser);
+            }
 
             return ser;
         }
@@ -281,7 +297,10 @@ public class ContextSerializerFactory
             throw new HessianException(e);
         }
 
-        _customDeserializerMap.put(cl.getName(), AbstractDeserializer.NULL);
+        synchronized (_customDeserializerMap)
+        {
+            _customDeserializerMap.put(cl.getName(), AbstractDeserializer.NULL);
+        }
 
         return null;
     }

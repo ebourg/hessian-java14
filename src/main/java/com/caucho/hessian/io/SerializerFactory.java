@@ -56,7 +56,6 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.lang.ref.SoftReference;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Factory for returning serialization methods.
@@ -91,8 +90,8 @@ public class SerializerFactory extends AbstractSerializerFactory
 
     private Deserializer _hashMapDeserializer;
     private Deserializer _arrayListDeserializer;
-    private ConcurrentHashMap _cachedSerializerMap;
-    private ConcurrentHashMap _cachedDeserializerMap;
+    private HashMap _cachedSerializerMap;
+    private HashMap _cachedDeserializerMap;
     private HashMap _cachedTypeDeserializerMap;
 
     private boolean _isAllowNonSerializable;
@@ -224,7 +223,10 @@ public class SerializerFactory extends AbstractSerializerFactory
 
         if (_cachedSerializerMap != null)
         {
-            serializer = (Serializer) _cachedSerializerMap.get(cl);
+            synchronized (_cachedSerializerMap)
+            {
+                serializer = (Serializer) _cachedSerializerMap.get(cl);
+            }
 
             if (serializer != null)
             {
@@ -236,10 +238,13 @@ public class SerializerFactory extends AbstractSerializerFactory
 
         if (_cachedSerializerMap == null)
         {
-            _cachedSerializerMap = new ConcurrentHashMap(8);
+            _cachedSerializerMap = new HashMap(8);
         }
 
-        _cachedSerializerMap.put(cl, serializer);
+        synchronized (_cachedSerializerMap)
+        {
+            _cachedSerializerMap.put(cl, serializer);
+        }
 
         return serializer;
     }
@@ -404,7 +409,10 @@ public class SerializerFactory extends AbstractSerializerFactory
 
         if (_cachedDeserializerMap != null)
         {
-            deserializer = (Deserializer) _cachedDeserializerMap.get(cl);
+            synchronized (_cachedDeserializerMap)
+            {
+                deserializer = (Deserializer) _cachedDeserializerMap.get(cl);
+            }
 
             if (deserializer != null)
             {
@@ -416,10 +424,13 @@ public class SerializerFactory extends AbstractSerializerFactory
 
         if (_cachedDeserializerMap == null)
         {
-            _cachedDeserializerMap = new ConcurrentHashMap(8);
+            _cachedDeserializerMap = new HashMap(8);
         }
 
-        _cachedDeserializerMap.put(cl, deserializer);
+        synchronized (_cachedDeserializerMap)
+        {
+            _cachedDeserializerMap.put(cl, deserializer);
+        }
 
         return deserializer;
     }
