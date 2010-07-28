@@ -48,8 +48,6 @@
 
 package com.caucho.hessian.io;
 
-import com.caucho.burlap.io.BurlapRemoteObject;
-
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.*;
@@ -296,11 +294,6 @@ public class SerializerFactory extends AbstractSerializerFactory
         }
 
         if (HessianRemoteObject.class.isAssignableFrom(cl))
-        {
-            return new RemoteSerializer();
-        }
-
-        else if (BurlapRemoteObject.class.isAssignableFrom(cl))
         {
             return new RemoteSerializer();
         }
@@ -801,7 +794,7 @@ public class SerializerFactory extends AbstractSerializerFactory
             }
             catch (Exception e)
             {
-                log.warning("Hessian/Burlap: '" + type + "' is an unknown class in " + _loader + ":\n" + e);
+                log.warning("Hessian: '" + type + "' is an unknown class in " + _loader + ":\n" + e);
 
                 log.log(Level.FINER, e.toString(), e);
             }
