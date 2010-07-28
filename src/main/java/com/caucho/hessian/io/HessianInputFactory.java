@@ -129,58 +129,41 @@ public class HessianInputFactory
         }
     }
 
-    public enum HeaderType
+    public static class HeaderType
     {
-        CALL_1_REPLY_1,
-        CALL_1_REPLY_2,
-        HESSIAN_2,
-        REPLY_1,
-        REPLY_2;
+        public static final HeaderType CALL_1_REPLY_1 = new HeaderType(false, false);
+        public static final HeaderType CALL_1_REPLY_2 = new HeaderType(false, true);
+        public static final HeaderType HESSIAN_2 = new HeaderType(true, true);
+        public static final HeaderType REPLY_1 = new HeaderType(false, false);
+        public static final HeaderType REPLY_2 = new HeaderType(false, true);
+        
+        private boolean call2;
+        private boolean reply2;
+
+        private HeaderType(boolean call2, boolean reply2)
+        {
+            this.call2 = call2;
+            this.reply2 = reply2;
+        }
 
         public boolean isCall1()
         {
-            switch (this)
-            {
-                case CALL_1_REPLY_1:
-                case CALL_1_REPLY_2:
-                    return true;
-                default:
-                    return false;
-            }
+            return !isCall2();
         }
 
         public boolean isCall2()
         {
-            switch (this)
-            {
-                case HESSIAN_2:
-                    return true;
-                default:
-                    return false;
-            }
+            return call2;
         }
 
         public boolean isReply1()
         {
-            switch (this)
-            {
-                case CALL_1_REPLY_1:
-                    return true;
-                default:
-                    return false;
-            }
+            return !isReply2();
         }
 
         public boolean isReply2()
         {
-            switch (this)
-            {
-                case CALL_1_REPLY_2:
-                case HESSIAN_2:
-                    return true;
-                default:
-                    return false;
-            }
+            return reply2;
         }
     }
 }

@@ -178,26 +178,25 @@ public class HessianSkeleton extends AbstractSkeleton
         AbstractHessianInput in;
         AbstractHessianOutput out;
 
-        switch (header)
+        if (header == HessianInputFactory.HeaderType.CALL_1_REPLY_1)
         {
-            case CALL_1_REPLY_1:
-                in = _hessianFactory.createHessianInput(is);
-                out = _hessianFactory.createHessianOutput(os);
-                break;
-
-            case CALL_1_REPLY_2:
-                in = _hessianFactory.createHessianInput(is);
-                out = _hessianFactory.createHessian2Output(os);
-                break;
-
-            case HESSIAN_2:
-                in = _hessianFactory.createHessian2Input(is);
-                in.readCall();
-                out = _hessianFactory.createHessian2Output(os);
-                break;
-
-            default:
-                throw new IllegalStateException(header + " is an unknown Hessian call");
+            in = _hessianFactory.createHessianInput(is);
+            out = _hessianFactory.createHessianOutput(os);
+        }
+        else if (header == HessianInputFactory.HeaderType.CALL_1_REPLY_2)
+        {
+            in = _hessianFactory.createHessianInput(is);
+            out = _hessianFactory.createHessian2Output(os);
+        }
+        else if (header == HessianInputFactory.HeaderType.HESSIAN_2)
+        {
+            in = _hessianFactory.createHessian2Input(is);
+            in.readCall();
+            out = _hessianFactory.createHessian2Output(os);
+        }
+        else
+        {
+            throw new IllegalStateException(header + " is an unknown Hessian call");
         }
 
         if (serializerFactory != null)
