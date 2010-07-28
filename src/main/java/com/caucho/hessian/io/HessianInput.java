@@ -1229,19 +1229,19 @@ public class HessianInput extends AbstractHessianInput
                 return null;
 
             case 'T':
-                return Boolean.valueOf(true);
+                return Boolean.TRUE;
 
             case 'F':
-                return Boolean.valueOf(false);
+                return Boolean.FALSE;
 
             case 'I':
-                return Integer.valueOf(parseInt());
+                return new Integer(parseInt());
 
             case 'L':
-                return Long.valueOf(parseLong());
+                return new Long(parseLong());
 
             case 'D':
-                return Double.valueOf(parseDouble());
+                return new Double(parseDouble());
 
             case 'd':
                 return new Date(parseLong());

@@ -163,22 +163,22 @@ public class BasicDeserializer extends AbstractDeserializer
                 return Boolean.valueOf(in.readBoolean());
 
             case BYTE:
-                return Byte.valueOf((byte) in.readInt());
+                return new Byte((byte) in.readInt());
 
             case SHORT:
-                return Short.valueOf((short) in.readInt());
+                return new Short((short) in.readInt());
 
             case INTEGER:
-                return Integer.valueOf(in.readInt());
+                return new Integer(in.readInt());
 
             case LONG:
-                return Long.valueOf(in.readLong());
+                return new Long(in.readLong());
 
             case FLOAT:
-                return Float.valueOf((float) in.readDouble());
+                return new Float((float) in.readDouble());
 
             case DOUBLE:
-                return Double.valueOf(in.readDouble());
+                return new Double(in.readDouble());
 
             case STRING:
                 return in.readString();
@@ -191,11 +191,11 @@ public class BasicDeserializer extends AbstractDeserializer
                 String s = in.readString();
                 if (s == null || s.equals(""))
                 {
-                    return Character.valueOf((char) 0);
+                    return new Character((char) 0);
                 }
                 else
                 {
-                    return Character.valueOf(s.charAt(0));
+                    return new Character(s.charAt(0));
                 }
             }
 
@@ -208,7 +208,7 @@ public class BasicDeserializer extends AbstractDeserializer
                 }
                 else
                 {
-                    return Character.valueOf(s.charAt(0));
+                    return new Character(s.charAt(0));
                 }
             }
 
@@ -356,7 +356,7 @@ public class BasicDeserializer extends AbstractDeserializer
 
                     while (!in.isEnd())
                     {
-                        list.add(Short.valueOf((short) in.readInt()));
+                        list.add(new Short((short) in.readInt()));
                     }
 
                     in.readEnd();
@@ -396,7 +396,7 @@ public class BasicDeserializer extends AbstractDeserializer
 
                     while (!in.isEnd())
                     {
-                        list.add(Integer.valueOf(in.readInt()));
+                        list.add(new Integer(in.readInt()));
                     }
 
 
@@ -437,7 +437,7 @@ public class BasicDeserializer extends AbstractDeserializer
 
                     while (!in.isEnd())
                     {
-                        list.add(Long.valueOf(in.readLong()));
+                        list.add(new Long(in.readLong()));
                     }
 
                     in.readEnd();

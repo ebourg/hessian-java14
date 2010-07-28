@@ -640,7 +640,7 @@ public class Hessian2Output
         }
         else
         {
-            _typeRefs.put(type, Integer.valueOf(_typeRefs.size()));
+            _typeRefs.put(type, new Integer(_typeRefs.size()));
 
             writeString(type);
         }

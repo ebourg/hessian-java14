@@ -2671,7 +2671,7 @@ public class Hessian2Input
             case 0xbd:
             case 0xbe:
             case 0xbf:
-                return Integer.valueOf(tag - BC_INT_ZERO);
+                return new Integer(tag - BC_INT_ZERO);
 
                 /* byte int */
             case 0xc0:
@@ -2690,7 +2690,7 @@ public class Hessian2Input
             case 0xcd:
             case 0xce:
             case 0xcf:
-                return Integer.valueOf(((tag - BC_INT_BYTE_ZERO) << 8) + read());
+                return new Integer(((tag - BC_INT_BYTE_ZERO) << 8) + read());
 
                 /* short int */
             case 0xd0:
@@ -2701,11 +2701,11 @@ public class Hessian2Input
             case 0xd5:
             case 0xd6:
             case 0xd7:
-                return Integer.valueOf(((tag - BC_INT_SHORT_ZERO) << 16)
+                return new Integer(((tag - BC_INT_SHORT_ZERO) << 16)
                         + 256 * read() + read());
 
             case 'I':
-                return Integer.valueOf(parseInt());
+                return new Integer(parseInt());
 
                 // direct long
             case 0xd8:
@@ -2733,7 +2733,7 @@ public class Hessian2Input
             case 0xed:
             case 0xee:
             case 0xef:
-                return Long.valueOf(tag - BC_LONG_ZERO);
+                return new Long(tag - BC_LONG_ZERO);
 
                 /* byte long */
             case 0xf0:
@@ -2752,7 +2752,7 @@ public class Hessian2Input
             case 0xfd:
             case 0xfe:
             case 0xff:
-                return Long.valueOf(((tag - BC_LONG_BYTE_ZERO) << 8) + read());
+                return new Long(((tag - BC_LONG_BYTE_ZERO) << 8) + read());
 
                 /* short long */
             case 0x38:
@@ -2763,35 +2763,35 @@ public class Hessian2Input
             case 0x3d:
             case 0x3e:
             case 0x3f:
-                return Long.valueOf(((tag - BC_LONG_SHORT_ZERO) << 16) + 256 * read() + read());
+                return new Long(((tag - BC_LONG_SHORT_ZERO) << 16) + 256 * read() + read());
 
             case BC_LONG_INT:
-                return Long.valueOf(parseInt());
+                return new Long(parseInt());
 
             case 'L':
-                return Long.valueOf(parseLong());
+                return new Long(parseLong());
 
             case BC_DOUBLE_ZERO:
-                return Double.valueOf(0);
+                return new Double(0);
 
             case BC_DOUBLE_ONE:
-                return Double.valueOf(1);
+                return new Double(1);
 
             case BC_DOUBLE_BYTE:
-                return Double.valueOf((byte) read());
+                return new Double((byte) read());
 
             case BC_DOUBLE_SHORT:
-                return Double.valueOf((short) (256 * read() + read()));
+                return new Double((short) (256 * read() + read()));
 
             case BC_DOUBLE_MILL:
             {
                 int mills = parseInt();
 
-                return Double.valueOf(0.001 * mills);
+                return new Double(0.001 * mills);
             }
 
             case 'D':
-                return Double.valueOf(parseDouble());
+                return new Double(parseDouble());
 
             case BC_DATE:
                 return new Date(parseLong());

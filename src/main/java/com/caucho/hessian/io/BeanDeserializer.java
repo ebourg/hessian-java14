@@ -337,31 +337,31 @@ public class BeanDeserializer extends AbstractMapDeserializer
         }
         else if (byte.class.equals(cl))
         {
-            return Byte.valueOf((byte) 0);
+            return new Byte((byte) 0);
         }
         else if (short.class.equals(cl))
         {
-            return Short.valueOf((short) 0);
+            return new Short((short) 0);
         }
         else if (char.class.equals(cl))
         {
-            return Character.valueOf((char) 0);
+            return new Character((char) 0);
         }
         else if (int.class.equals(cl))
         {
-            return Integer.valueOf(0);
+            return new Integer(0);
         }
         else if (long.class.equals(cl))
         {
-            return Long.valueOf(0);
+            return new Long(0);
         }
         else if (float.class.equals(cl))
         {
-            return Double.valueOf(0);
+            return new Double(0);
         }
         else if (double.class.equals(cl))
         {
-            return Double.valueOf(0);
+            return new Double(0);
         }
         else
         {
