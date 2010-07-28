@@ -154,7 +154,7 @@ public class EnumDeserializer extends AbstractDeserializer
 
         try
         {
-            return _valueOf.invoke(null, _enumType, name);
+            return _valueOf.invoke(null, new Object[]{_enumType, name});
         }
         catch (Exception e)
         {

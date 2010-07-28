@@ -360,15 +360,15 @@ public class BasicSerializer extends AbstractSerializer
                 break;
 
             case BYTE_HANDLE:
-                out.writeObject(new ByteHandle((Byte) obj));
+                out.writeObject(new ByteHandle(((Byte) obj).byteValue()));
                 break;
 
             case SHORT_HANDLE:
-                out.writeObject(new ShortHandle((Short) obj));
+                out.writeObject(new ShortHandle(((Short) obj).shortValue()));
                 break;
 
             case FLOAT_HANDLE:
-                out.writeObject(new FloatHandle((Float) obj));
+                out.writeObject(new FloatHandle(((Float) obj).floatValue()));
                 break;
 
             default:

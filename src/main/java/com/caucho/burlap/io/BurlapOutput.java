@@ -808,7 +808,7 @@ public class BurlapOutput extends AbstractBurlapOutput
 
         if (ref != null)
         {
-            return ref;
+            return ref.intValue();
         }
         else
         {

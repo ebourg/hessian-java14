@@ -295,7 +295,7 @@ public class AnnotationSerializer extends AbstractSerializer
 
             try
             {
-                value = method.invoke(obj);
+                value = method.invoke(obj, null);
             }
             catch (InvocationTargetException e)
             {
@@ -328,7 +328,7 @@ public class AnnotationSerializer extends AbstractSerializer
 
             try
             {
-                value = (Boolean) method.invoke(obj);
+                value = ((Boolean) method.invoke(obj, null)).booleanValue();
             }
             catch (InvocationTargetException e)
             {
@@ -354,7 +354,7 @@ public class AnnotationSerializer extends AbstractSerializer
 
             try
             {
-                value = (Integer) method.invoke(obj);
+                value = ((Integer) method.invoke(obj, null)).intValue();
             }
             catch (InvocationTargetException e)
             {
@@ -380,7 +380,7 @@ public class AnnotationSerializer extends AbstractSerializer
 
             try
             {
-                value = (Long) method.invoke(obj);
+                value = ((Long) method.invoke(obj, null)).longValue();
             }
             catch (InvocationTargetException e)
             {
@@ -406,7 +406,7 @@ public class AnnotationSerializer extends AbstractSerializer
 
             try
             {
-                value = (Double) method.invoke(obj);
+                value = ((Double) method.invoke(obj, null)).doubleValue();
             }
             catch (InvocationTargetException e)
             {
@@ -432,7 +432,7 @@ public class AnnotationSerializer extends AbstractSerializer
 
             try
             {
-                value = (String) method.invoke(obj);
+                value = (String) method.invoke(obj, null);
             }
             catch (InvocationTargetException e)
             {
@@ -458,7 +458,7 @@ public class AnnotationSerializer extends AbstractSerializer
 
             try
             {
-                value = (java.util.Date) method.invoke(obj);
+                value = (java.util.Date) method.invoke(obj, null);
             }
             catch (InvocationTargetException e)
             {

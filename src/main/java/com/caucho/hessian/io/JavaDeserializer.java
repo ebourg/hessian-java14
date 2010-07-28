@@ -641,7 +641,7 @@ public class JavaDeserializer extends AbstractMapDeserializer
             }
             catch (Exception e)
             {
-                logDeserializeError(_field, obj, value, e);
+                logDeserializeError(_field, obj, Boolean.valueOf(value), e);
             }
         }
     }
@@ -668,7 +668,7 @@ public class JavaDeserializer extends AbstractMapDeserializer
             }
             catch (Exception e)
             {
-                logDeserializeError(_field, obj, value, e);
+                logDeserializeError(_field, obj, new Integer(value), e);
             }
         }
     }
@@ -695,7 +695,7 @@ public class JavaDeserializer extends AbstractMapDeserializer
             }
             catch (Exception e)
             {
-                logDeserializeError(_field, obj, value, e);
+                logDeserializeError(_field, obj, new Integer(value), e);
             }
         }
     }
@@ -722,7 +722,7 @@ public class JavaDeserializer extends AbstractMapDeserializer
             }
             catch (Exception e)
             {
-                logDeserializeError(_field, obj, value, e);
+                logDeserializeError(_field, obj, new Integer(value), e);
             }
         }
     }
@@ -749,7 +749,7 @@ public class JavaDeserializer extends AbstractMapDeserializer
             }
             catch (Exception e)
             {
-                logDeserializeError(_field, obj, value, e);
+                logDeserializeError(_field, obj, new Long(value), e);
             }
         }
     }
@@ -776,7 +776,7 @@ public class JavaDeserializer extends AbstractMapDeserializer
             }
             catch (Exception e)
             {
-                logDeserializeError(_field, obj, value, e);
+                logDeserializeError(_field, obj, new Double(value), e);
             }
         }
     }
@@ -803,7 +803,7 @@ public class JavaDeserializer extends AbstractMapDeserializer
             }
             catch (Exception e)
             {
-                logDeserializeError(_field, obj, value, e);
+                logDeserializeError(_field, obj, new Double(value), e);
             }
         }
     }

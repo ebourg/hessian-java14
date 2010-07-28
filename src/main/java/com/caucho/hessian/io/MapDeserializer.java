@@ -124,7 +124,7 @@ public class MapDeserializer extends AbstractMapDeserializer
         {
             try
             {
-                map = (Map) _ctor.newInstance();
+                map = (Map) _ctor.newInstance(null);
             }
             catch (Exception e)
             {
@@ -183,7 +183,7 @@ public class MapDeserializer extends AbstractMapDeserializer
         {
             try
             {
-                return (Map) _ctor.newInstance();
+                return (Map) _ctor.newInstance(null);
             }
             catch (Exception e)
             {

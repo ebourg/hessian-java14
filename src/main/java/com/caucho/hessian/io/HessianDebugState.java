@@ -944,7 +944,7 @@ public class HessianDebugState implements Hessian2Constants
                     return new IntegerState(new RefState1(this), "ref");
 
                 default:
-                    printObject("x" + String.format("%02x", ch));
+                    printObject("x" + String.format("%02x", new Object[]{new Integer(ch)}));
                     return this;
             }
         }
@@ -1317,7 +1317,7 @@ public class HessianDebugState implements Hessian2Constants
 
             if (++_length == 8)
             {
-                Double value = Double.longBitsToDouble(_value);
+                Double value = new Double(Double.longBitsToDouble(_value));
 
                 if (_next.isShift(value))
                 {
@@ -1353,7 +1353,7 @@ public class HessianDebugState implements Hessian2Constants
 
             if (++_length == 4)
             {
-                Double value = 0.001 * _value;
+                Double value = new Double(0.001 * _value);
 
                 if (_next.isShift(value))
                 {
@@ -1725,7 +1725,7 @@ public class HessianDebugState implements Hessian2Constants
                 }
                 else if (type instanceof Integer)
                 {
-                    int iValue = (Integer) type;
+                    int iValue = ((Integer) type).intValue();
 
                     if (iValue >= 0 && iValue < _typeDefList.size())
                     {
@@ -1854,11 +1854,11 @@ public class HessianDebugState implements Hessian2Constants
             {
                 if (type instanceof String)
                 {
-                    _typeDefList.add((String) type);
+                    _typeDefList.add(type);
                 }
                 else if (type instanceof Integer)
                 {
-                    int iValue = (Integer) type;
+                    int iValue = ((Integer) type).intValue();
 
                     if (iValue >= 0 && iValue < _typeDefList.size())
                     {
@@ -1996,7 +1996,7 @@ public class HessianDebugState implements Hessian2Constants
             }
             else if (_state == COUNT)
             {
-                _count = (Integer) object;
+                _count = ((Integer) object).intValue();
 
                 _state = FIELD;
             }
@@ -2119,7 +2119,7 @@ public class HessianDebugState implements Hessian2Constants
         {
             if (_state == TYPE)
             {
-                int def = (Integer) object;
+                int def = ((Integer) object).intValue();
 
                 _def = (ObjectDef) _objectDefList.get(def);
 
@@ -2215,7 +2215,7 @@ public class HessianDebugState implements Hessian2Constants
                 }
                 else if (object instanceof Integer)
                 {
-                    int index = (Integer) object;
+                    int index = ((Integer) object).intValue();
 
                     if (index >= 0 && index < _typeDefList.size())
                     {
@@ -2361,7 +2361,7 @@ public class HessianDebugState implements Hessian2Constants
                 }
                 else if (object instanceof Integer)
                 {
-                    int index = (Integer) object;
+                    int index = ((Integer) object).intValue();
 
                     if (index >= 0 && index < _typeDefList.size())
                     {
@@ -2510,7 +2510,7 @@ public class HessianDebugState implements Hessian2Constants
 
                 if (object instanceof Integer)
                 {
-                    int index = (Integer) object;
+                    int index = ((Integer) object).intValue();
 
                     if (index >= 0 && index < _typeDefList.size())
                     {
@@ -2546,7 +2546,7 @@ public class HessianDebugState implements Hessian2Constants
             }
             else if (_state == LENGTH)
             {
-                _length = (Integer) object;
+                _length = ((Integer) object).intValue();
 
                 if (!_isTyped)
                 {
@@ -2779,7 +2779,7 @@ public class HessianDebugState implements Hessian2Constants
             {
                 Integer count = (Integer) object;
 
-                _count = count;
+                _count = count.intValue();
 
                 _state = ARG;
 

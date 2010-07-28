@@ -210,11 +210,11 @@ public class WriteReplaceSerializer extends AbstractSerializer
         {
             if (_writeReplaceFactory != null)
             {
-                return _writeReplace.invoke(_writeReplaceFactory, obj);
+                return _writeReplace.invoke(_writeReplaceFactory, new Object[]{obj});
             }
             else
             {
-                return _writeReplace.invoke(obj);
+                return _writeReplace.invoke(obj, null);
             }
         }
         catch (RuntimeException e)

@@ -4017,7 +4017,7 @@ public class Hessian2Input
         }
         else
         {
-            sb.append(String.format("\\x%02x", ch & 0xff));
+            sb.append(String.format("\\x%02x", new Object[]{new Integer(ch & 0xff)}));
         }
     }
 

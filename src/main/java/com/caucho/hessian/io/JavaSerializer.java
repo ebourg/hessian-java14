@@ -221,11 +221,11 @@ public class JavaSerializer extends AbstractSerializer
 
                 if (_writeReplaceFactory != null)
                 {
-                    repl = _writeReplace.invoke(_writeReplaceFactory, obj);
+                    repl = _writeReplace.invoke(_writeReplaceFactory, new Object[]{obj});
                 }
                 else
                 {
-                    repl = _writeReplace.invoke(obj);
+                    repl = _writeReplace.invoke(obj, null);
                 }
 
                 // out.removeRef(obj);

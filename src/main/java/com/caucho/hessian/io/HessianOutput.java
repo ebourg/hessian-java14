@@ -872,7 +872,7 @@ public class HessianOutput extends AbstractHessianOutput
         }
         else
         {
-            return value;
+            return value.intValue();
         }
     }
 
