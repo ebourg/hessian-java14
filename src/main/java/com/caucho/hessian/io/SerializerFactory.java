@@ -490,7 +490,12 @@ public class SerializerFactory extends AbstractSerializerFactory
         {
             deserializer = new MapDeserializer(cl);
         }
-
+        
+        else if (Iterator.class.isAssignableFrom(cl))
+        {
+            deserializer = IteratorDeserializer.create();
+        }
+        
         else if (cl.isInterface())
         {
             deserializer = new ObjectDeserializer(cl);
