@@ -74,13 +74,11 @@ public class StringValueDeserializer extends AbstractStringValueDeserializer
         }
     }
 
-    @Override
     public Class getType()
     {
         return _cl;
     }
 
-    @Override
     protected Object create(String value)
             throws IOException
     {

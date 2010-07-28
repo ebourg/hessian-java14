@@ -161,7 +161,6 @@ public class UnsafeSerializer extends AbstractSerializer
         }
     }
 
-    @Override
     public void writeObject(Object obj, AbstractHessianOutput out)
             throws IOException
     {
@@ -322,7 +321,6 @@ public class UnsafeSerializer extends AbstractSerializer
             }
         }
 
-        @Override
         final void serialize(AbstractHessianOutput out, Object obj)
                 throws IOException
         {
@@ -565,7 +563,6 @@ public class UnsafeSerializer extends AbstractSerializer
             }
         }
 
-        @Override
         final void serialize(AbstractHessianOutput out, Object obj)
                 throws IOException
         {
@@ -591,7 +588,6 @@ public class UnsafeSerializer extends AbstractSerializer
             }
         }
 
-        @Override
         void serialize(AbstractHessianOutput out, Object obj)
                 throws IOException
         {

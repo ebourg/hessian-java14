@@ -855,7 +855,6 @@ public class HessianOutput extends AbstractHessianOutput
         }
     }
 
-    @Override
     public int getRef(Object obj)
     {
         Integer value;

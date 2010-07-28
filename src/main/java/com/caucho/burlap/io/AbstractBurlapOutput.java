@@ -67,7 +67,6 @@ import java.io.IOException;
  */
 abstract public class AbstractBurlapOutput extends AbstractHessianOutput
 {
-    @Override
     public void startCall(String method, int length)
             throws IOException
     {

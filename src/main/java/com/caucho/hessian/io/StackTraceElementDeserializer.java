@@ -61,7 +61,6 @@ public class StackTraceElementDeserializer extends JavaDeserializer
         super(StackTraceElement.class);
     }
 
-    @Override
     protected Object instantiate()
             throws Exception
     {

@@ -58,13 +58,11 @@ import com.caucho.hessian.HessianException;
  */
 public class ObjectNameDeserializer extends AbstractStringValueDeserializer
 {
-    @Override
     public Class getType()
     {
         return ObjectName.class;
     }
 
-    @Override
     protected Object create(String value)
     {
         try

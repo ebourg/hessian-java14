@@ -147,13 +147,11 @@ public class JavaDeserializer extends AbstractMapDeserializer
         }
     }
 
-    @Override
     public Class<?> getType()
     {
         return _type;
     }
 
-    @Override
     public boolean isReadResolve()
     {
         return _readResolve != null;
@@ -182,7 +180,6 @@ public class JavaDeserializer extends AbstractMapDeserializer
         }
     }
 
-    @Override
     public Object[] createFields(int len)
     {
         return new FieldDeserializer[len];
@@ -200,7 +197,6 @@ public class JavaDeserializer extends AbstractMapDeserializer
         return reader;
     }
 
-    @Override
     public Object readObject(AbstractHessianInput in,
                              Object[] fields)
             throws IOException
@@ -225,7 +221,6 @@ public class JavaDeserializer extends AbstractMapDeserializer
         }
     }
 
-    @Override
     public Object readObject(AbstractHessianInput in,
                              String[] fieldNames)
             throws IOException

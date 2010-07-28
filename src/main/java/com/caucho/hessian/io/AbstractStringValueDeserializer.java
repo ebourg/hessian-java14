@@ -60,7 +60,6 @@ abstract public class AbstractStringValueDeserializer
     abstract protected Object create(String value)
             throws IOException;
 
-    @Override
     public Object readMap(AbstractHessianInput in)
             throws IOException
     {
@@ -89,7 +88,6 @@ abstract public class AbstractStringValueDeserializer
         return object;
     }
 
-    @Override
     public Object readObject(AbstractHessianInput in, Object[] fields)
             throws IOException
     {

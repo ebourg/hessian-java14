@@ -203,7 +203,6 @@ public class WriteReplaceSerializer extends AbstractSerializer
         }
     }
 
-    @Override
     protected Object writeReplace(Object obj)
     {
         try

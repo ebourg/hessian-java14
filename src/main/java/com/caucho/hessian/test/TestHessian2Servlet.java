@@ -1980,7 +1980,6 @@ public class TestHessian2Servlet
      * @param in  the Hessian input stream
      * @param out the Hessian output stream
      */
-    @Override
     public void invoke(InputStream is, OutputStream os, String objectId,
                        SerializerFactory serializerFactory)
             throws Exception

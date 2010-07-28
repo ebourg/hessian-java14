@@ -67,35 +67,30 @@ public class ObjectDeserializer extends AbstractDeserializer
         return _cl;
     }
 
-    @Override
     public Object readObject(AbstractHessianInput in)
             throws IOException
     {
         return in.readObject();
     }
 
-    @Override
     public Object readObject(AbstractHessianInput in, Object[] fields)
             throws IOException
     {
         throw new UnsupportedOperationException(String.valueOf(this));
     }
 
-    @Override
     public Object readList(AbstractHessianInput in, int length)
             throws IOException
     {
         throw new UnsupportedOperationException(String.valueOf(this));
     }
 
-    @Override
     public Object readLengthList(AbstractHessianInput in, int length)
             throws IOException
     {
         throw new UnsupportedOperationException(String.valueOf(this));
     }
 
-    @Override
     public String toString()
     {
         return getClass().getSimpleName() + "[" + _cl + "]";

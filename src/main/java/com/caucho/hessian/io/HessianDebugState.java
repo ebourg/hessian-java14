@@ -1201,13 +1201,11 @@ public class HessianDebugState implements Hessian2Constants
             _length = length;
         }
 
-        @Override
         boolean isShift(Object o)
         {
             return true;
         }
 
-        @Override
         State shift(Object o)
         {
             println("ref #" + o);
@@ -1215,7 +1213,6 @@ public class HessianDebugState implements Hessian2Constants
             return _next;
         }
 
-        @Override
         State next(int ch)
         {
             return nextObject(ch);
@@ -1231,13 +1228,11 @@ public class HessianDebugState implements Hessian2Constants
             super(next);
         }
 
-        @Override
         boolean isShift(Object o)
         {
             return true;
         }
 
-        @Override
         State shift(Object o)
         {
             println("ref #" + o);
@@ -1245,7 +1240,6 @@ public class HessianDebugState implements Hessian2Constants
             return _next;
         }
 
-        @Override
         State next(int ch)
         {
             return nextObject(ch);
@@ -1716,13 +1710,11 @@ public class HessianDebugState implements Hessian2Constants
             }
         }
 
-        @Override
         boolean isShift(Object value)
         {
             return _state == TYPE;
         }
 
-        @Override
         State shift(Object type)
         {
             if (_state == TYPE)
@@ -1753,7 +1745,6 @@ public class HessianDebugState implements Hessian2Constants
             }
         }
 
-        @Override
         int depth()
         {
             if (_state == TYPE)
@@ -1852,13 +1843,11 @@ public class HessianDebugState implements Hessian2Constants
             }
         }
 
-        @Override
         boolean isShift(Object value)
         {
             return _state == TYPE;
         }
 
-        @Override
         State shift(Object type)
         {
             if (_state == TYPE)
@@ -1889,7 +1878,6 @@ public class HessianDebugState implements Hessian2Constants
             }
         }
 
-        @Override
         int depth()
         {
             if (_state == TYPE)
@@ -1989,13 +1977,11 @@ public class HessianDebugState implements Hessian2Constants
             _state = TYPE;
         }
 
-        @Override
         boolean isShift(Object value)
         {
             return true;
         }
 
-        @Override
         State shift(Object object)
         {
             if (_state == TYPE)
@@ -2039,7 +2025,6 @@ public class HessianDebugState implements Hessian2Constants
             return this;
         }
 
-        @Override
         int depth()
         {
             if (_state <= TYPE)
@@ -2118,7 +2103,6 @@ public class HessianDebugState implements Hessian2Constants
             println("object " + _def.getType() + " (#" + _refId + ")");
         }
 
-        @Override
         boolean isShift(Object value)
         {
             if (_state == TYPE)
@@ -2131,7 +2115,6 @@ public class HessianDebugState implements Hessian2Constants
             }
         }
 
-        @Override
         State shift(Object object)
         {
             if (_state == TYPE)
@@ -2153,7 +2136,6 @@ public class HessianDebugState implements Hessian2Constants
             return this;
         }
 
-        @Override
         int depth()
         {
             if (_state <= TYPE)
@@ -2216,13 +2198,11 @@ public class HessianDebugState implements Hessian2Constants
             _state = TYPE;
         }
 
-        @Override
         boolean isShift(Object value)
         {
             return _state == TYPE || _state == LENGTH;
         }
 
-        @Override
         State shift(Object object)
         {
             if (_state == TYPE)
@@ -2265,7 +2245,6 @@ public class HessianDebugState implements Hessian2Constants
             }
         }
 
-        @Override
         int depth()
         {
             if (_state <= LENGTH)
@@ -2365,13 +2344,11 @@ public class HessianDebugState implements Hessian2Constants
             }
         }
 
-        @Override
         boolean isShift(Object value)
         {
             return _state == TYPE || _state == LENGTH;
         }
 
-        @Override
         State shift(Object object)
         {
             if (_state == TYPE)
@@ -2414,7 +2391,6 @@ public class HessianDebugState implements Hessian2Constants
             }
         }
 
-        @Override
         int depth()
         {
             if (_state <= LENGTH)
@@ -2521,13 +2497,11 @@ public class HessianDebugState implements Hessian2Constants
             }
         }
 
-        @Override
         boolean isShift(Object value)
         {
             return _state == TYPE || _state == LENGTH;
         }
 
-        @Override
         State shift(Object object)
         {
             if (_state == TYPE)
@@ -2596,7 +2570,6 @@ public class HessianDebugState implements Hessian2Constants
             }
         }
 
-        @Override
         int depth()
         {
             if (_state <= LENGTH)
@@ -2788,13 +2761,11 @@ public class HessianDebugState implements Hessian2Constants
             return _next.depth() + 5;
         }
 
-        @Override
         boolean isShift(Object value)
         {
             return _state != ARG;
         }
 
-        @Override
         State shift(Object object)
         {
             if (_state == METHOD)
@@ -2827,7 +2798,6 @@ public class HessianDebugState implements Hessian2Constants
             }
         }
 
-        @Override
         State next(int ch)
         {
             switch (_state)
@@ -2954,7 +2924,6 @@ public class HessianDebugState implements Hessian2Constants
             return _next.depth() + 2;
         }
 
-        @Override
         State next(int ch)
         {
             if (ch < 0)
@@ -2983,7 +2952,6 @@ public class HessianDebugState implements Hessian2Constants
             return _next.depth() + 2;
         }
 
-        @Override
         State next(int ch)
         {
             return nextObject(ch);

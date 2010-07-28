@@ -132,7 +132,6 @@ public class Hessian2Output
     /**
      * Writes a complete method call.
      */
-    @Override
     public void call(String method, Object[] args)
             throws IOException
     {
@@ -552,7 +551,6 @@ public class Hessian2Output
      * C &lt;string> &lt;int> &lt;string>*
      * </pre></code>
      */
-    @Override
     public int writeObjectBegin(String type)
             throws IOException
     {
@@ -1336,7 +1334,6 @@ public class Hessian2Output
     /**
      * Writes a full output stream.
      */
-    @Override
     public void writeByteStream(InputStream is)
             throws IOException
     {
@@ -1375,7 +1372,6 @@ public class Hessian2Output
      *
      * @param value the integer value to write.
      */
-    @Override
     protected void writeRef(int value)
             throws IOException
     {
@@ -1413,7 +1409,6 @@ public class Hessian2Output
         }
     }
 
-    @Override
     public int getRef(Object obj)
     {
         return _refs.get(obj);
@@ -1422,7 +1417,6 @@ public class Hessian2Output
     /**
      * Removes a reference.
      */
-    @Override
     public boolean removeRef(Object obj)
             throws IOException
     {
@@ -1755,7 +1749,6 @@ public class Hessian2Output
     /**
      * Resets the references for streaming.
      */
-    @Override
     public void resetReferences()
     {
         if (_refs != null)
@@ -1796,7 +1789,6 @@ public class Hessian2Output
             _offset += 3; // skip 'b' xNN xNN
         }
 
-        @Override
         public void write(int ch)
                 throws IOException
         {
@@ -1817,7 +1809,6 @@ public class Hessian2Output
             _buffer[_offset++] = (byte) ch;
         }
 
-        @Override
         public void write(byte[] buffer, int offset, int length)
                 throws IOException
         {
@@ -1855,7 +1846,6 @@ public class Hessian2Output
             }
         }
 
-        @Override
         public void close()
                 throws IOException
         {

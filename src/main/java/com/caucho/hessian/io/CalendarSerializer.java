@@ -61,7 +61,6 @@ public class CalendarSerializer extends AbstractSerializer
     /**
      * java.util.Calendar serializes to com.caucho.hessian.io.CalendarHandle
      */
-    @Override
     public Object writeReplace(Object obj)
     {
         Calendar cal = (Calendar) obj;

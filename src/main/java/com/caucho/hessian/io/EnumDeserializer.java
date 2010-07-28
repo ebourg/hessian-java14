@@ -119,7 +119,6 @@ public class EnumDeserializer extends AbstractDeserializer
         return obj;
     }
 
-    @Override
     public Object readObject(AbstractHessianInput in, Object[] fields)
             throws IOException
     {

@@ -144,7 +144,6 @@ public class MapDeserializer extends AbstractMapDeserializer
         return map;
     }
 
-    @Override
     public Object readObject(AbstractHessianInput in,
                              Object[] fields)
             throws IOException

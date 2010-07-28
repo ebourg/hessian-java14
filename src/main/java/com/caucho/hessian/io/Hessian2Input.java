@@ -290,7 +290,6 @@ public class Hessian2Input
      * int
      * </pre>
      */
-    @Override
     public int readMethodArgLength()
             throws IOException
     {
@@ -347,7 +346,6 @@ public class Hessian2Input
      * Reads a reply as an object.
      * If the reply has a fault, throws the exception.
      */
-    @Override
     public Object readReply(Class expectedClass)
             throws Throwable
     {

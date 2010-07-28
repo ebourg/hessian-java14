@@ -797,7 +797,6 @@ public class BurlapOutput extends AbstractBurlapOutput
         }
     }
 
-    @Override
     public int getRef(Object obj)
     {
         if (_refs == null)

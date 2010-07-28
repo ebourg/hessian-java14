@@ -73,13 +73,11 @@ public class RemoteDeserializer extends JavaDeserializer
         super(HessianRemote.class);
     }
 
-    @Override
     public boolean isReadResolve()
     {
         return true;
     }
 
-    @Override
     protected Object resolve(AbstractHessianInput in, Object obj)
             throws Exception
     {

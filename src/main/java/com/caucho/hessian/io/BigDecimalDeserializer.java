@@ -58,13 +58,11 @@ import com.caucho.hessian.HessianException;
  */
 public class BigDecimalDeserializer extends AbstractStringValueDeserializer
 {
-    @Override
     public Class getType()
     {
         return BigDecimal.class;
     }
 
-    @Override
     protected Object create(String value)
     {
         return new BigDecimal(value);
