@@ -88,7 +88,7 @@ public class AnnotationDeserializer extends AbstractMapDeserializer
         {
             int ref = in.addRef(null);
 
-            HashMap<String, Object> valueMap = new HashMap<String, Object>(8);
+            HashMap valueMap = new HashMap(8);
 
             while (!in.isEnd())
             {
@@ -125,7 +125,7 @@ public class AnnotationDeserializer extends AbstractMapDeserializer
         {
             int ref = in.addRef(null);
 
-            HashMap<String, Object> valueMap = new HashMap<String, Object>(8);
+            HashMap valueMap = new HashMap(8);
 
             for (int i = 0; i < fieldNames.length; i++)
             {

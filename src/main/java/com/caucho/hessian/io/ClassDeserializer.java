@@ -56,8 +56,8 @@ import java.util.HashMap;
  */
 public class ClassDeserializer extends AbstractMapDeserializer
 {
-    private static final HashMap<String, Class> _primClasses
-            = new HashMap<String, Class>();
+    private static final HashMap _primClasses
+            = new HashMap();
 
     private ClassLoader _loader;
 
@@ -137,7 +137,7 @@ public class ClassDeserializer extends AbstractMapDeserializer
             throw new IOException("Serialized Class expects name.");
         }
 
-        Class cl = _primClasses.get(name);
+        Class cl = (Class) _primClasses.get(name);
 
         if (cl != null)
         {

@@ -58,9 +58,9 @@ import java.util.concurrent.atomic.AtomicReferenceArray;
  * <p>The free list is bounded.  Freeing an object when the list is full will
  * do nothing.
  */
-public final class HessianFreeList<T>
+public final class HessianFreeList
 {
-    private final AtomicReferenceArray<T> _freeStack;
+    private final AtomicReferenceArray _freeStack;
     private final AtomicInteger _top = new AtomicInteger();
 
     /**
@@ -79,7 +79,7 @@ public final class HessianFreeList<T>
      *
      * @return the new object or null.
      */
-    public T allocate()
+    public Object allocate()
     {
         int top = _top.get();
 
@@ -99,7 +99,7 @@ public final class HessianFreeList<T>
      *
      * @param obj the object to be freed.
      */
-    public boolean free(T obj)
+    public boolean free(Object obj)
     {
         int top = _top.get();
 
@@ -117,7 +117,7 @@ public final class HessianFreeList<T>
         }
     }
 
-    public boolean allowFree(T obj)
+    public boolean allowFree(Object obj)
     {
         return _top.get() < _freeStack.length();
     }
@@ -128,7 +128,7 @@ public final class HessianFreeList<T>
      *
      * @param obj the object to be freed.
      */
-    public void freeCareful(T obj)
+    public void freeCareful(Object obj)
     {
         if (checkDuplicate(obj))
         {
@@ -141,7 +141,7 @@ public final class HessianFreeList<T>
     /**
      * Debugging to see if the object has already been freed.
      */
-    public boolean checkDuplicate(T obj)
+    public boolean checkDuplicate(Object obj)
     {
         int top = _top.get();
 

@@ -308,7 +308,7 @@ public class HessianSkeleton extends AbstractSkeleton
             return;
         }
 
-        Class<?>[] args = method.getParameterTypes();
+        Class[] args = method.getParameterTypes();
 
         if (argLength != args.length && argLength >= 0)
         {

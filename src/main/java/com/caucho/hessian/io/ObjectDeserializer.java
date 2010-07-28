@@ -55,14 +55,14 @@ import java.io.IOException;
  */
 public class ObjectDeserializer extends AbstractDeserializer
 {
-    private Class<?> _cl;
+    private Class _cl;
 
-    public ObjectDeserializer(Class<?> cl)
+    public ObjectDeserializer(Class cl)
     {
         _cl = cl;
     }
 
-    public Class<?> getType()
+    public Class getType()
     {
         return _cl;
     }

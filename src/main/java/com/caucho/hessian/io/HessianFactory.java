@@ -64,17 +64,17 @@ public class HessianFactory
     private SerializerFactory _serializerFactory;
     private SerializerFactory _defaultSerializerFactory;
 
-    private final HessianFreeList<Hessian2Output> _freeHessian2Output
-            = new HessianFreeList<Hessian2Output>(32);
+    private final HessianFreeList _freeHessian2Output
+            = new HessianFreeList(32);
 
-    private final HessianFreeList<HessianOutput> _freeHessianOutput
-            = new HessianFreeList<HessianOutput>(32);
+    private final HessianFreeList _freeHessianOutput
+            = new HessianFreeList(32);
 
-    private final HessianFreeList<Hessian2Input> _freeHessian2Input
-            = new HessianFreeList<Hessian2Input>(32);
+    private final HessianFreeList _freeHessian2Input
+            = new HessianFreeList(32);
 
-    private final HessianFreeList<HessianInput> _freeHessianInput
-            = new HessianFreeList<HessianInput>(32);
+    private final HessianFreeList _freeHessianInput
+            = new HessianFreeList(32);
 
     public HessianFactory()
     {
@@ -156,7 +156,7 @@ public class HessianFactory
      */
     public Hessian2Output createHessian2Output(OutputStream os)
     {
-        Hessian2Output out = _freeHessian2Output.allocate();
+        Hessian2Output out = (Hessian2Output) _freeHessian2Output.allocate();
 
         if (out != null)
         {

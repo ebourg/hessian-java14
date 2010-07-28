@@ -67,8 +67,8 @@ public class JavaSerializer extends AbstractSerializer
     private static final Logger log
             = Logger.getLogger(JavaSerializer.class.getName());
 
-    private static final WeakHashMap<Class<?>, SoftReference<JavaSerializer>> _serializerMap
-            = new WeakHashMap<Class<?>, SoftReference<JavaSerializer>>();
+    private static final WeakHashMap _serializerMap
+            = new WeakHashMap();
 
     private Field[] _fields;
     private FieldSerializer[] _fieldSerializers;
@@ -76,26 +76,26 @@ public class JavaSerializer extends AbstractSerializer
     private Object _writeReplaceFactory;
     private Method _writeReplace;
 
-    public JavaSerializer(Class<?> cl)
+    public JavaSerializer(Class cl)
     {
         introspect(cl);
 
         _writeReplace = getWriteReplace(cl);
     }
 
-    public static Serializer create(Class<?> cl)
+    public static Serializer create(Class cl)
     {
         synchronized (_serializerMap)
         {
-            SoftReference<JavaSerializer> baseRef
-                    = _serializerMap.get(cl);
+            SoftReference baseRef
+                    = (SoftReference) _serializerMap.get(cl);
 
-            JavaSerializer base = baseRef != null ? baseRef.get() : null;
+            JavaSerializer base = baseRef != null ? (JavaSerializer) baseRef.get() : null;
 
             if (base == null)
             {
                 base = new JavaSerializer(cl);
-                baseRef = new SoftReference<JavaSerializer>(base);
+                baseRef = new SoftReference(base);
                 _serializerMap.put(cl, baseRef);
             }
 
@@ -103,15 +103,15 @@ public class JavaSerializer extends AbstractSerializer
         }
     }
 
-    protected void introspect(Class<?> cl)
+    protected void introspect(Class cl)
     {
         if (_writeReplace != null)
         {
             _writeReplace.setAccessible(true);
         }
 
-        ArrayList<Field> primitiveFields = new ArrayList<Field>();
-        ArrayList<Field> compoundFields = new ArrayList<Field>();
+        ArrayList primitiveFields = new ArrayList();
+        ArrayList compoundFields = new ArrayList();
 
         for (; cl != null; cl = cl.getSuperclass())
         {
@@ -188,8 +188,9 @@ public class JavaSerializer extends AbstractSerializer
     {
         for (; cl != null; cl = cl.getSuperclass())
         {
-            for (Method method : cl.getDeclaredMethods())
+            for (int i = 0; i < cl.getDeclaredMethods().length; i++)
             {
+                Method method = cl.getDeclaredMethods()[i];
                 if (method.getName().equals("writeReplace")
                         && method.getParameterTypes().length == 1
                         && param.equals(method.getParameterTypes()[0]))
@@ -210,7 +211,7 @@ public class JavaSerializer extends AbstractSerializer
             return;
         }
 
-        Class<?> cl = obj.getClass();
+        Class cl = obj.getClass();
 
         try
         {

@@ -76,9 +76,9 @@ public class SerializerFactory extends AbstractSerializerFactory
     private static final HashMap _staticTypeMap;
 
     private static final
-    WeakHashMap<ClassLoader, SoftReference<SerializerFactory>>
+    WeakHashMap
             _defaultFactoryRefMap
-            = new WeakHashMap<ClassLoader, SoftReference<SerializerFactory>>();
+            = new WeakHashMap();
 
     private ContextSerializerFactory _contextFactory;
     private ClassLoader _loader;
@@ -120,21 +120,21 @@ public class SerializerFactory extends AbstractSerializerFactory
 
         synchronized (_defaultFactoryRefMap)
         {
-            SoftReference<SerializerFactory> factoryRef
-                    = _defaultFactoryRefMap.get(loader);
+            SoftReference factoryRef
+                    = (SoftReference) _defaultFactoryRefMap.get(loader);
 
             SerializerFactory factory = null;
 
             if (factoryRef != null)
             {
-                factory = factoryRef.get();
+                factory = (SerializerFactory) factoryRef.get();
             }
 
             if (factory == null)
             {
                 factory = new SerializerFactory();
 
-                factoryRef = new SoftReference<SerializerFactory>(factory);
+                factoryRef = new SoftReference(factory);
 
                 _defaultFactoryRefMap.put(loader, factoryRef);
             }
@@ -198,7 +198,7 @@ public class SerializerFactory extends AbstractSerializerFactory
      * @param cl the class of the object that needs to be serialized.
      * @return a serializer object for the serialization.
      */
-    public Serializer getObjectSerializer(Class<?> cl)
+    public Serializer getObjectSerializer(Class cl)
             throws HessianProtocolException
     {
         Serializer serializer = getSerializer(cl);

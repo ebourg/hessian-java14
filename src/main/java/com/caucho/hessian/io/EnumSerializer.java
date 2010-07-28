@@ -84,7 +84,7 @@ public class EnumSerializer extends AbstractSerializer
             return;
         }
 
-        Class<?> cl = obj.getClass();
+        Class cl = obj.getClass();
 
         if (!cl.isEnum() && cl.getSuperclass().isEnum())
         {

@@ -71,7 +71,7 @@ import java.io.PrintWriter;
  */
 public class BurlapServlet extends GenericServlet
 {
-    private Class<?> _apiClass;
+    private Class _apiClass;
     private Object _service;
 
     private BurlapSkeleton _skeleton;
@@ -92,7 +92,7 @@ public class BurlapServlet extends GenericServlet
     /**
      * Sets the api-class.
      */
-    public void setAPIClass(Class<?> apiClass)
+    public void setAPIClass(Class apiClass)
     {
         _apiClass = apiClass;
     }
@@ -110,7 +110,7 @@ public class BurlapServlet extends GenericServlet
             if (_service == null)
             {
                 String className = getInitParameter("service-class");
-                Class<?> serviceClass = null;
+                Class serviceClass = null;
 
                 if (className != null)
                 {

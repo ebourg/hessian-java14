@@ -73,7 +73,7 @@ public class WriteReplaceSerializer extends AbstractSerializer
     private Method _writeReplace;
     private Serializer _baseSerializer;
 
-    public WriteReplaceSerializer(Class<?> cl,
+    public WriteReplaceSerializer(Class cl,
                                   ClassLoader loader,
                                   Serializer baseSerializer)
     {
@@ -82,13 +82,13 @@ public class WriteReplaceSerializer extends AbstractSerializer
         _baseSerializer = baseSerializer;
     }
 
-    private void introspectWriteReplace(Class<?> cl, ClassLoader loader)
+    private void introspectWriteReplace(Class cl, ClassLoader loader)
     {
         try
         {
             String className = cl.getName() + "HessianSerializer";
 
-            Class<?> serializerClass = Class.forName(className, false, loader);
+            Class serializerClass = Class.forName(className, false, loader);
 
             Object serializerObject = serializerClass.newInstance();
 
@@ -122,8 +122,9 @@ public class WriteReplaceSerializer extends AbstractSerializer
     {
         for (; cl != null; cl = cl.getSuperclass())
         {
-            for (Method method : cl.getDeclaredMethods())
+            for (int i = 0; i < cl.getDeclaredMethods().length; i++)
             {
+                Method method = cl.getDeclaredMethods()[i];
                 if (method.getName().equals("writeReplace")
                         && method.getParameterTypes().length == 1
                         && param.equals(method.getParameterTypes()[0]))

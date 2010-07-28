@@ -57,7 +57,7 @@ public class AbstractDeserializer implements Deserializer
 {
     public static final NullDeserializer NULL = new NullDeserializer();
 
-    public Class<?> getType()
+    public Class getType()
     {
         return Object.class;
     }

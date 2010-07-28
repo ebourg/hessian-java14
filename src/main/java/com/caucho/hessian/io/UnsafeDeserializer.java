@@ -74,11 +74,11 @@ public class UnsafeDeserializer extends AbstractMapDeserializer
     private static boolean _isEnabled;
     private static Unsafe _unsafe;
 
-    private Class<?> _type;
-    private HashMap<String, FieldDeserializer> _fieldMap;
+    private Class _type;
+    private HashMap _fieldMap;
     private Method _readResolve;
 
-    public UnsafeDeserializer(Class<?> cl)
+    public UnsafeDeserializer(Class cl)
     {
         _type = cl;
         _fieldMap = getFieldMap(cl);
@@ -96,7 +96,7 @@ public class UnsafeDeserializer extends AbstractMapDeserializer
         return _isEnabled;
     }
 
-    public Class<?> getType()
+    public Class getType()
     {
         return _type;
     }
@@ -197,7 +197,7 @@ public class UnsafeDeserializer extends AbstractMapDeserializer
     /**
      * Returns the readResolve method
      */
-    protected Method getReadResolve(Class<?> cl)
+    protected Method getReadResolve(Class cl)
     {
         for (; cl != null; cl = cl.getSuperclass())
         {
@@ -271,9 +271,9 @@ public class UnsafeDeserializer extends AbstractMapDeserializer
         {
             int ref = in.addRef(obj);
 
-            for (FieldDeserializer reader : fields)
+            for (int i = 0; i < fields.length; i++)
             {
-                reader.deserialize(in, obj);
+                fields[i].deserialize(in, obj);
             }
 
             Object resolve = resolve(in, obj);
@@ -304,9 +304,9 @@ public class UnsafeDeserializer extends AbstractMapDeserializer
         {
             int ref = in.addRef(obj);
 
-            for (String fieldName : fieldNames)
+            for (int i = 0; i < fieldNames.length; i++)
             {
-                FieldDeserializer reader = _fieldMap.get(fieldName);
+                FieldDeserializer reader = (FieldDeserializer) _fieldMap.get(fieldNames[i]);
 
                 if (reader != null)
                 {
@@ -372,10 +372,9 @@ public class UnsafeDeserializer extends AbstractMapDeserializer
     /**
      * Creates a map of the classes fields.
      */
-    protected HashMap<String, FieldDeserializer> getFieldMap(Class<?> cl)
+    protected HashMap getFieldMap(Class cl)
     {
-        HashMap<String, FieldDeserializer> fieldMap
-                = new HashMap<String, FieldDeserializer>();
+        HashMap fieldMap = new HashMap();
 
         for (; cl != null; cl = cl.getSuperclass())
         {
@@ -404,7 +403,7 @@ public class UnsafeDeserializer extends AbstractMapDeserializer
                     e.printStackTrace();
                 }
 
-                Class<?> type = field.getType();
+                Class type = field.getType();
                 FieldDeserializer deser;
 
                 if (String.class.equals(type))
@@ -908,10 +907,12 @@ public class UnsafeDeserializer extends AbstractMapDeserializer
 
         try
         {
-            Class<?> unsafe = Class.forName("sun.misc.Unsafe");
+            Class unsafe = Class.forName("sun.misc.Unsafe");
             Field theUnsafe = null;
-            for (Field field : unsafe.getDeclaredFields())
+            Field[] fields = unsafe.getDeclaredFields();
+            for (int i = 0; i < fields.length; i++)
             {
+                Field field = fields[i];
                 if (field.getName().equals("theUnsafe"))
                 {
                     theUnsafe = field;

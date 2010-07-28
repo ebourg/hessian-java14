@@ -92,12 +92,12 @@ public class Hessian2Input
 
     private static boolean _isCloseStreamOnClose;
 
-    protected ArrayList<Object> _refs
-            = new ArrayList<Object>();
-    protected ArrayList<ObjectDefinition> _classDefs
-            = new ArrayList<ObjectDefinition>();
-    protected ArrayList<String> _types
-            = new ArrayList<String>();
+    protected ArrayList _refs
+            = new ArrayList();
+    protected ArrayList _classDefs
+            = new ArrayList();
+    protected ArrayList _types
+            = new ArrayList();
 
     // the underlying input stream
     private InputStream _is;
@@ -2457,7 +2457,7 @@ public class Hessian2Input
                     throw new HessianProtocolException("'" + ref + "' is an unknown class definition");
                 }
 
-                ObjectDefinition def = _classDefs.get(ref);
+                ObjectDefinition def = (ObjectDefinition) _classDefs.get(ref);
 
                 return readObjectInstance(cl, def);
             }
@@ -2472,7 +2472,7 @@ public class Hessian2Input
                     throw new HessianProtocolException("'" + ref + "' is an unknown class definition");
                 }
 
-                ObjectDefinition def = _classDefs.get(ref);
+                ObjectDefinition def = (ObjectDefinition) _classDefs.get(ref);
 
                 return readObjectInstance(cl, def);
             }
@@ -3069,7 +3069,7 @@ public class Hessian2Input
                             + Integer.toHexString(tag) + "'");
                 }
 
-                ObjectDefinition def = _classDefs.get(ref);
+                ObjectDefinition def = (ObjectDefinition) _classDefs.get(ref);
 
                 return readObjectInstance(null, def);
             }
@@ -3083,7 +3083,7 @@ public class Hessian2Input
                     throw error("Illegal object reference #" + ref);
                 }
 
-                ObjectDefinition def = _classDefs.get(ref);
+                ObjectDefinition def = (ObjectDefinition) _classDefs.get(ref);
 
                 return readObjectInstance(null, def);
             }
@@ -3114,7 +3114,7 @@ public class Hessian2Input
      * O string <int> (string)* <value>*
      * </pre>
      */
-    private void readObjectDefinition(Class<?> cl)
+    private void readObjectDefinition(Class cl)
             throws IOException
     {
         String type = readString();
@@ -3141,7 +3141,7 @@ public class Hessian2Input
         _classDefs.add(def);
     }
 
-    private Object readObjectInstance(Class<?> cl,
+    private Object readObjectInstance(Class cl,
                                       ObjectDefinition def)
             throws IOException
     {

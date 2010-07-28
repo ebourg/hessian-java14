@@ -57,7 +57,7 @@ import java.io.IOException;
  */
 public interface Deserializer
 {
-    public Class<?> getType();
+    public Class getType();
 
     public boolean isReadResolve();
 

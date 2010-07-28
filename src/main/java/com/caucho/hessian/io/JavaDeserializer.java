@@ -65,13 +65,13 @@ import com.caucho.hessian.io.UnsafeDeserializer.FieldDeserializer;
  */
 public class JavaDeserializer extends AbstractMapDeserializer
 {
-    private Class<?> _type;
-    private HashMap<?, FieldDeserializer> _fieldMap;
+    private Class _type;
+    private HashMap _fieldMap;
     private Method _readResolve;
-    private Constructor<?> _constructor;
+    private Constructor _constructor;
     private Object[] _constructorArgs;
 
-    public JavaDeserializer(Class<?> cl)
+    public JavaDeserializer(Class cl)
     {
         _type = cl;
         _fieldMap = getFieldMap(cl);
@@ -83,12 +83,12 @@ public class JavaDeserializer extends AbstractMapDeserializer
             _readResolve.setAccessible(true);
         }
 
-        Constructor<?>[] constructors = cl.getDeclaredConstructors();
+        Constructor[] constructors = cl.getDeclaredConstructors();
         long bestCost = Long.MAX_VALUE;
 
         for (int i = 0; i < constructors.length; i++)
         {
-            Class<?>[] param = constructors[i].getParameterTypes();
+            Class[] param = constructors[i].getParameterTypes();
             long cost = 0;
 
             for (int j = 0; j < param.length; j++)
@@ -138,7 +138,7 @@ public class JavaDeserializer extends AbstractMapDeserializer
         if (_constructor != null)
         {
             _constructor.setAccessible(true);
-            Class<?>[] params = _constructor.getParameterTypes();
+            Class[] params = _constructor.getParameterTypes();
             _constructorArgs = new Object[params.length];
             for (int i = 0; i < params.length; i++)
             {
@@ -147,7 +147,7 @@ public class JavaDeserializer extends AbstractMapDeserializer
         }
     }
 
-    public Class<?> getType()
+    public Class getType()
     {
         return _type;
     }
@@ -248,7 +248,7 @@ public class JavaDeserializer extends AbstractMapDeserializer
     /**
      * Returns the readResolve method
      */
-    protected Method getReadResolve(Class<?> cl)
+    protected Method getReadResolve(Class cl)
     {
         for (; cl != null; cl = cl.getSuperclass())
         {
@@ -280,7 +280,7 @@ public class JavaDeserializer extends AbstractMapDeserializer
             {
                 Object key = in.readObject();
 
-                FieldDeserializer deser = _fieldMap.get(key);
+                FieldDeserializer deser = (FieldDeserializer) _fieldMap.get(key);
 
                 if (deser != null)
                 {
@@ -322,9 +322,9 @@ public class JavaDeserializer extends AbstractMapDeserializer
         {
             int ref = in.addRef(obj);
 
-            for (FieldDeserializer reader : fields)
+            for (int i = 0; i < fields.length; i++)
             {
-                reader.deserialize(in, obj);
+                fields[i].deserialize(in, obj);
             }
 
             Object resolve = resolve(in, obj);
@@ -355,9 +355,9 @@ public class JavaDeserializer extends AbstractMapDeserializer
         {
             int ref = in.addRef(obj);
 
-            for (String fieldName : fieldNames)
+            for (int i = 0; i < fieldNames.length; i++)
             {
-                FieldDeserializer reader = _fieldMap.get(fieldName);
+                FieldDeserializer reader = (FieldDeserializer) _fieldMap.get(fieldNames[i]);
 
                 if (reader != null)
                 {
@@ -437,10 +437,10 @@ public class JavaDeserializer extends AbstractMapDeserializer
     /**
      * Creates a map of the classes fields.
      */
-    protected HashMap<String, FieldDeserializer> getFieldMap(Class cl)
+    protected HashMap getFieldMap(Class cl)
     {
-        HashMap<String, FieldDeserializer> fieldMap
-                = new HashMap<String, FieldDeserializer>();
+        HashMap fieldMap
+                = new HashMap();
 
         for (; cl != null; cl = cl.getSuperclass())
         {
@@ -469,7 +469,7 @@ public class JavaDeserializer extends AbstractMapDeserializer
                     e.printStackTrace();
                 }
 
-                Class<?> type = field.getType();
+                Class type = field.getType();
                 FieldDeserializer deser;
 
                 if (String.class.equals(type))
@@ -531,7 +531,7 @@ public class JavaDeserializer extends AbstractMapDeserializer
     /**
      * Creates a map of the classes fields.
      */
-    protected static Object getParamArg(Class<?> cl)
+    protected static Object getParamArg(Class cl)
     {
         if (!cl.isPrimitive())
         {

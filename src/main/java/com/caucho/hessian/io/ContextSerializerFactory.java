@@ -72,42 +72,42 @@ public class ContextSerializerFactory
     private static Deserializer OBJECT_DESERIALIZER
             = new BasicDeserializer(BasicDeserializer.OBJECT);
 
-    private static final WeakHashMap<ClassLoader, SoftReference<ContextSerializerFactory>>
+    private static final WeakHashMap
             _contextRefMap
-            = new WeakHashMap<ClassLoader, SoftReference<ContextSerializerFactory>>();
+            = new WeakHashMap();
 
     private static final ClassLoader _systemClassLoader;
 
-    private static HashMap<String, Serializer> _staticSerializerMap;
-    private static HashMap<String, Deserializer> _staticDeserializerMap;
+    private static HashMap _staticSerializerMap;
+    private static HashMap _staticDeserializerMap;
     private static HashMap _staticClassNameMap;
 
     private ContextSerializerFactory _parent;
     private ClassLoader _loader;
 
-    private final HashSet<String> _serializerFiles = new HashSet<String>();
-    private final HashSet<String> _deserializerFiles = new HashSet<String>();
+    private final HashSet _serializerFiles = new HashSet();
+    private final HashSet _deserializerFiles = new HashSet();
 
-    private final HashMap<String, Serializer> _serializerClassMap
-            = new HashMap<String, Serializer>();
+    private final HashMap _serializerClassMap
+            = new HashMap();
 
-    private final ConcurrentHashMap<String, Serializer> _customSerializerMap
-            = new ConcurrentHashMap<String, Serializer>();
+    private final ConcurrentHashMap _customSerializerMap
+            = new ConcurrentHashMap();
 
-    private final HashMap<Class, Serializer> _serializerInterfaceMap
-            = new HashMap<Class, Serializer>();
+    private final HashMap _serializerInterfaceMap
+            = new HashMap();
 
-    private final HashMap<String, Deserializer> _deserializerClassMap
-            = new HashMap<String, Deserializer>();
+    private final HashMap _deserializerClassMap
+            = new HashMap();
 
-    private final HashMap<String, Deserializer> _deserializerClassNameMap
-            = new HashMap<String, Deserializer>();
+    private final HashMap _deserializerClassNameMap
+            = new HashMap();
 
-    private final ConcurrentHashMap<String, Deserializer> _customDeserializerMap
-            = new ConcurrentHashMap<String, Deserializer>();
+    private final ConcurrentHashMap _customDeserializerMap
+            = new ConcurrentHashMap();
 
-    private final HashMap<Class, Deserializer> _deserializerInterfaceMap
-            = new HashMap<Class, Deserializer>();
+    private final HashMap _deserializerInterfaceMap
+            = new HashMap();
 
     public ContextSerializerFactory(ContextSerializerFactory parent,
                                     ClassLoader loader)
@@ -131,14 +131,14 @@ public class ContextSerializerFactory
     {
         synchronized (_contextRefMap)
         {
-            SoftReference<ContextSerializerFactory> factoryRef
-                    = _contextRefMap.get(loader);
+            SoftReference factoryRef
+                    = (SoftReference) _contextRefMap.get(loader);
 
             ContextSerializerFactory factory = null;
 
             if (factoryRef != null)
             {
-                factory = factoryRef.get();
+                factory = (ContextSerializerFactory) factoryRef.get();
             }
 
             if (factory == null)
@@ -151,7 +151,7 @@ public class ContextSerializerFactory
                 }
 
                 factory = new ContextSerializerFactory(parent, loader);
-                factoryRef = new SoftReference<ContextSerializerFactory>(factory);
+                factoryRef = new SoftReference(factory);
 
                 _contextRefMap.put(loader, factoryRef);
             }
@@ -170,7 +170,7 @@ public class ContextSerializerFactory
      */
     public Serializer getSerializer(String className)
     {
-        Serializer serializer = _serializerClassMap.get(className);
+        Serializer serializer = (Serializer) _serializerClassMap.get(className);
 
         if (serializer == AbstractSerializer.NULL)
         {
@@ -190,7 +190,7 @@ public class ContextSerializerFactory
      */
     public Serializer getCustomSerializer(Class cl)
     {
-        Serializer serializer = _customSerializerMap.get(cl.getName());
+        Serializer serializer = (Serializer) _customSerializerMap.get(cl.getName());
 
         if (serializer == AbstractSerializer.NULL)
         {
@@ -231,7 +231,7 @@ public class ContextSerializerFactory
      */
     public Deserializer getDeserializer(String className)
     {
-        Deserializer deserializer = _deserializerClassMap.get(className);
+        Deserializer deserializer = (Deserializer) _deserializerClassMap.get(className);
 
         if (deserializer == AbstractDeserializer.NULL)
         {
@@ -251,7 +251,7 @@ public class ContextSerializerFactory
      */
     public Deserializer getCustomDeserializer(Class cl)
     {
-        Deserializer deserializer = _customDeserializerMap.get(cl.getName());
+        Deserializer deserializer = (Deserializer) _customDeserializerMap.get(cl.getName());
 
         if (deserializer == AbstractDeserializer.NULL)
         {
@@ -308,27 +308,28 @@ public class ContextSerializerFactory
             _deserializerClassNameMap.putAll(_staticClassNameMap);
         }
 
-        HashMap<Class, Class> classMap;
+        HashMap classMap;
 
-        classMap = new HashMap<Class, Class>();
+        classMap = new HashMap();
         initSerializerFiles("META-INF/hessian/serializers",
                 _serializerFiles,
                 classMap,
                 Serializer.class);
 
-        for (Map.Entry<Class, Class> entry : classMap.entrySet())
+        for (Iterator it = classMap.entrySet().iterator(); it.hasNext();)
         {
+            Map.Entry entry = (Map.Entry) it.next();
             try
             {
-                Serializer ser = (Serializer) entry.getValue().newInstance();
+                Serializer ser = (Serializer) ((Class) entry.getValue()).newInstance();
 
-                if (entry.getKey().isInterface())
+                if (((Class) entry.getKey()).isInterface())
                 {
                     _serializerInterfaceMap.put(entry.getKey(), ser);
                 }
                 else
                 {
-                    _serializerClassMap.put(entry.getKey().getName(), ser);
+                    _serializerClassMap.put(((Class) entry.getKey()).getName(), ser);
                 }
             }
             catch (Exception e)
@@ -337,25 +338,26 @@ public class ContextSerializerFactory
             }
         }
 
-        classMap = new HashMap<Class, Class>();
+        classMap = new HashMap();
         initSerializerFiles("META-INF/hessian/deserializers",
                 _deserializerFiles,
                 classMap,
                 Deserializer.class);
 
-        for (Map.Entry<Class, Class> entry : classMap.entrySet())
+        for (Iterator it = classMap.entrySet().iterator(); it.hasNext();)
         {
+            Map.Entry entry = (Map.Entry) it.next();
             try
             {
-                Deserializer ser = (Deserializer) entry.getValue().newInstance();
+                Deserializer ser = (Deserializer) ((Class) entry.getValue()).newInstance();
 
-                if (entry.getKey().isInterface())
+                if (((Class) entry.getKey()).isInterface())
                 {
                     _deserializerInterfaceMap.put(entry.getKey(), ser);
                 }
                 else
                 {
-                    _deserializerClassMap.put(entry.getKey().getName(), ser);
+                    _deserializerClassMap.put(((Class) entry.getKey()).getName(), ser);
                 }
             }
             catch (Exception e)
@@ -366,8 +368,8 @@ public class ContextSerializerFactory
     }
 
     private void initSerializerFiles(String fileName,
-                                     HashSet<String> fileList,
-                                     HashMap<Class, Class> classMap,
+                                     HashSet fileList,
+                                     HashMap classMap,
                                      Class type)
     {
         try
@@ -403,8 +405,9 @@ public class ContextSerializerFactory
                     Properties props = new Properties();
                     props.load(is);
 
-                    for (Map.Entry entry : props.entrySet())
+                    for (Iterator it = props.entrySet().iterator(); it.hasNext();)
                     {
+                        Map.Entry entry = (Map.Entry) it.next();
                         String apiName = (String) entry.getKey();
                         String serializerName = (String) entry.getValue();
 

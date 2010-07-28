@@ -71,11 +71,11 @@ public class BeanSerializer extends AbstractSerializer
     private Object _writeReplaceFactory;
     private Method _writeReplace;
 
-    public BeanSerializer(Class<?> cl, ClassLoader loader)
+    public BeanSerializer(Class cl, ClassLoader loader)
     {
         introspectWriteReplace(cl, loader);
 
-        ArrayList<Method> primitiveMethods = new ArrayList<Method>();
+        ArrayList primitiveMethods = new ArrayList();
         ArrayList compoundMethods = new ArrayList();
 
         for (; cl != null; cl = cl.getSuperclass())
@@ -228,8 +228,9 @@ public class BeanSerializer extends AbstractSerializer
     {
         for (; cl != null; cl = cl.getSuperclass())
         {
-            for (Method method : cl.getDeclaredMethods())
+            for (int i = 0; i < cl.getDeclaredMethods().length; i++)
             {
+                Method method = cl.getDeclaredMethods()[i];
                 if (method.getName().equals("writeReplace")
                         && method.getParameterTypes().length == 1
                         && param.equals(method.getParameterTypes()[0]))
@@ -373,11 +374,13 @@ public class BeanSerializer extends AbstractSerializer
         return null;
     }
 
-    static class MethodNameCmp implements Comparator<Method>
+    static class MethodNameCmp implements Comparator
     {
-        public int compare(Method a, Method b)
+        public int compare(Object a, Object b)
         {
-            return a.getName().compareTo(b.getName());
+            Method ma = (Method) a;
+            Method mb = (Method) b;
+            return ma.getName().compareTo(mb.getName());
         }
     }
 }

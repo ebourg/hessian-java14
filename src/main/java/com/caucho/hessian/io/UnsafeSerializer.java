@@ -72,8 +72,8 @@ public class UnsafeSerializer extends AbstractSerializer
     private static boolean _isEnabled;
     private static Unsafe _unsafe;
 
-    private static final WeakHashMap<Class<?>, SoftReference<UnsafeSerializer>> _serializerMap
-            = new WeakHashMap<Class<?>, SoftReference<UnsafeSerializer>>();
+    private static final WeakHashMap _serializerMap
+            = new WeakHashMap();
 
     private static Object[] NULL_ARGS = new Object[0];
 
@@ -85,26 +85,26 @@ public class UnsafeSerializer extends AbstractSerializer
         return _isEnabled;
     }
 
-    public UnsafeSerializer(Class<?> cl)
+    public UnsafeSerializer(Class cl)
     {
         introspect(cl);
     }
 
-    public static UnsafeSerializer create(Class<?> cl)
+    public static UnsafeSerializer create(Class cl)
     {
         ClassLoader loader = cl.getClassLoader();
 
         synchronized (_serializerMap)
         {
-            SoftReference<UnsafeSerializer> baseRef
-                    = _serializerMap.get(cl);
+            SoftReference baseRef
+                    = (SoftReference) _serializerMap.get(cl);
 
-            UnsafeSerializer base = baseRef != null ? baseRef.get() : null;
+            UnsafeSerializer base = baseRef != null ? (UnsafeSerializer) baseRef.get() : null;
 
             if (base == null)
             {
                 base = new UnsafeSerializer(cl);
-                baseRef = new SoftReference<UnsafeSerializer>(base);
+                baseRef = new SoftReference(base);
                 _serializerMap.put(cl, baseRef);
             }
 
@@ -112,10 +112,10 @@ public class UnsafeSerializer extends AbstractSerializer
         }
     }
 
-    protected void introspect(Class<?> cl)
+    protected void introspect(Class cl)
     {
-        ArrayList<Field> primitiveFields = new ArrayList<Field>();
-        ArrayList<Field> compoundFields = new ArrayList<Field>();
+        ArrayList primitiveFields = new ArrayList();
+        ArrayList compoundFields = new ArrayList();
 
         for (; cl != null; cl = cl.getSuperclass())
         {
@@ -146,7 +146,7 @@ public class UnsafeSerializer extends AbstractSerializer
             }
         }
 
-        ArrayList<Field> fields = new ArrayList<Field>();
+        ArrayList fields = new ArrayList();
         fields.addAll(primitiveFields);
         fields.addAll(compoundFields);
 
@@ -169,7 +169,7 @@ public class UnsafeSerializer extends AbstractSerializer
             return;
         }
 
-        Class<?> cl = obj.getClass();
+        Class cl = obj.getClass();
 
         int ref = out.writeObjectBegin(cl.getName());
 
@@ -248,7 +248,7 @@ public class UnsafeSerializer extends AbstractSerializer
 
     private static FieldSerializer getFieldSerializer(Field field)
     {
-        Class<?> type = field.getType();
+        Class type = field.getType();
 
         if (boolean.class.equals(type))
         {
@@ -613,8 +613,10 @@ public class UnsafeSerializer extends AbstractSerializer
         {
             Class unsafe = Class.forName("sun.misc.Unsafe");
             Field theUnsafe = null;
-            for (Field field : unsafe.getDeclaredFields())
+            Field[] fields = unsafe.getDeclaredFields();
+            for (int i = 0; i < fields.length; i++)
             {
+                Field field = fields[i];
                 if (field.getName().equals("theUnsafe"))
                 {
                     theUnsafe = field;

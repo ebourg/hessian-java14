@@ -61,13 +61,13 @@ public class HessianDebugState implements Hessian2Constants
     private PrintWriter _dbg;
 
     private State _state;
-    private ArrayList<State> _stateStack = new ArrayList<State>();
+    private ArrayList _stateStack = new ArrayList();
 
-    private ArrayList<ObjectDef> _objectDefList
-            = new ArrayList<ObjectDef>();
+    private ArrayList _objectDefList
+            = new ArrayList();
 
-    private ArrayList<String> _typeDefList
-            = new ArrayList<String>();
+    private ArrayList _typeDefList
+            = new ArrayList();
 
     private int _refId;
     private boolean _isNewline = true;
@@ -117,7 +117,7 @@ public class HessianDebugState implements Hessian2Constants
 
     State popStack()
     {
-        return _stateStack.remove(_stateStack.size() - 1);
+        return (State) _stateStack.remove(_stateStack.size() - 1);
     }
 
     public void setDepth(int depth)
@@ -1721,7 +1721,7 @@ public class HessianDebugState implements Hessian2Constants
             {
                 if (type instanceof String)
                 {
-                    _typeDefList.add((String) type);
+                    _typeDefList.add(type);
                 }
                 else if (type instanceof Integer)
                 {
@@ -1968,7 +1968,7 @@ public class HessianDebugState implements Hessian2Constants
         private int _count;
 
         private String _type;
-        private ArrayList<String> _fields = new ArrayList<String>();
+        private ArrayList _fields = new ArrayList();
 
         ObjectDefState(State next)
         {
@@ -2098,7 +2098,7 @@ public class HessianDebugState implements Hessian2Constants
                 throw new IllegalStateException(def + " is an unknown object type");
             }
 
-            _def = _objectDefList.get(def);
+            _def = (ObjectDef) _objectDefList.get(def);
 
             println("object " + _def.getType() + " (#" + _refId + ")");
         }
@@ -2121,7 +2121,7 @@ public class HessianDebugState implements Hessian2Constants
             {
                 int def = (Integer) object;
 
-                _def = _objectDefList.get(def);
+                _def = (ObjectDef) _objectDefList.get(def);
 
                 println("object " + _def.getType() + " (#" + _refId + ")");
 
@@ -2357,7 +2357,7 @@ public class HessianDebugState implements Hessian2Constants
 
                 if (type instanceof String)
                 {
-                    _typeDefList.add((String) type);
+                    _typeDefList.add(type);
                 }
                 else if (object instanceof Integer)
                 {
@@ -3112,9 +3112,9 @@ public class HessianDebugState implements Hessian2Constants
     static class ObjectDef
     {
         private String _type;
-        private ArrayList<String> _fields;
+        private ArrayList _fields;
 
-        ObjectDef(String type, ArrayList<String> fields)
+        ObjectDef(String type, ArrayList fields)
         {
             _type = type;
             _fields = fields;
@@ -3125,7 +3125,7 @@ public class HessianDebugState implements Hessian2Constants
             return _type;
         }
 
-        ArrayList<String> getFields()
+        ArrayList getFields()
         {
             return _fields;
         }

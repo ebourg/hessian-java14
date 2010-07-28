@@ -295,7 +295,7 @@ public class BurlapProxyFactory implements ServiceProxyFactory, ObjectFactory
      */
     public Object getObjectInstance(Object obj, Name name,
                                     Context nameCtx,
-                                    Hashtable<?, ?> environment)
+                                    Hashtable environment)
             throws Exception
     {
         Reference ref = (Reference) obj;

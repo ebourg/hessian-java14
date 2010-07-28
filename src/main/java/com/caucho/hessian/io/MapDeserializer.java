@@ -57,10 +57,10 @@ import java.lang.reflect.*;
  */
 public class MapDeserializer extends AbstractMapDeserializer
 {
-    private Class<?> _type;
-    private Constructor<?> _ctor;
+    private Class _type;
+    private Constructor _ctor;
 
-    public MapDeserializer(Class<?> type)
+    public MapDeserializer(Class type)
     {
         if (type == null)
         {
@@ -69,7 +69,7 @@ public class MapDeserializer extends AbstractMapDeserializer
 
         _type = type;
 
-        Constructor<?>[] ctors = type.getConstructors();
+        Constructor[] ctors = type.getConstructors();
         for (int i = 0; i < ctors.length; i++)
         {
             if (ctors[i].getParameterTypes().length == 0)
@@ -91,7 +91,7 @@ public class MapDeserializer extends AbstractMapDeserializer
         }
     }
 
-    public Class<?> getType()
+    public Class getType()
     {
         if (_type != null)
         {
@@ -149,7 +149,7 @@ public class MapDeserializer extends AbstractMapDeserializer
             throws IOException
     {
         String[] fieldNames = (String[]) fields;
-        Map<Object, Object> map = createMap();
+        Map map = createMap();
 
         int ref = in.addRef(map);
 

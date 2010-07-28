@@ -94,7 +94,7 @@ public class Hessian2Output
             = new IdentityIntMap(256);
 
     // map of types
-    private HashMap<String, Integer> _typeRefs;
+    private HashMap _typeRefs;
 
     private final byte[] _buffer = new byte[SIZE];
     private int _offset;
@@ -627,7 +627,7 @@ public class Hessian2Output
 
         if (_typeRefs == null)
         {
-            _typeRefs = new HashMap<String, Integer>();
+            _typeRefs = new HashMap();
         }
 
         Integer typeRefV = (Integer) _typeRefs.get(type);

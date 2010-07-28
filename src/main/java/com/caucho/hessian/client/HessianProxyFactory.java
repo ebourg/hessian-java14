@@ -358,7 +358,7 @@ public class HessianProxyFactory implements ServiceProxyFactory, ObjectFactory
             {
                 ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
-                Class<?> cl = Class.forName(className, false, loader);
+                Class cl = Class.forName(className, false, loader);
 
                 factory = (HessianConnectionFactory) cl.newInstance();
 
@@ -395,7 +395,7 @@ public class HessianProxyFactory implements ServiceProxyFactory, ObjectFactory
             throw new HessianRuntimeException(url + " has an unknown api.");
         }
 
-        Class<?> apiClass = Class.forName(apiClassName, false, _loader);
+        Class apiClass = Class.forName(apiClassName, false, _loader);
 
         return create(apiClass, url);
     }
@@ -453,7 +453,7 @@ public class HessianProxyFactory implements ServiceProxyFactory, ObjectFactory
      * @param url the URL where the client object is located.
      * @return a proxy to the object with the specified interface.
      */
-    public Object create(Class<?> api, URL url, ClassLoader loader)
+    public Object create(Class api, URL url, ClassLoader loader)
     {
         if (api == null)
         {
@@ -538,7 +538,7 @@ public class HessianProxyFactory implements ServiceProxyFactory, ObjectFactory
      * JNDI object factory so the proxy can be used as a resource.
      */
     public Object getObjectInstance(Object obj, Name name,
-                                    Context nameCtx, Hashtable<?, ?> environment)
+                                    Context nameCtx, Hashtable environment)
             throws Exception
     {
         Reference ref = (Reference) obj;

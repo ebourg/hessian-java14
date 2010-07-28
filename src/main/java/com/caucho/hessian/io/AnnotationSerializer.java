@@ -164,8 +164,9 @@ public class AnnotationSerializer extends AbstractSerializer
 
             ArrayList methods = new ArrayList();
 
-            for (Method method : _annType.getDeclaredMethods())
+            for (int m = 0; m < _annType.getDeclaredMethods().length; m++)
             {
+                Method method = _annType.getDeclaredMethods()[m];
                 if (method.getName().equals("hashCode")
                         || method.getName().equals("toString")
                         || method.getName().equals("annotationType"))
@@ -216,8 +217,9 @@ public class AnnotationSerializer extends AbstractSerializer
 
         if (ifaces != null)
         {
-            for (Class iface : ifaces)
+            for (int i = 0; i < ifaces.length; i++)
             {
+                Class iface = ifaces[i];
                 if (iface.equals(Annotation.class))
                 {
                     return cl;

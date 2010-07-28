@@ -53,6 +53,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Iterator;
 
 import java.util.logging.*;
 
@@ -64,10 +65,10 @@ import com.caucho.hessian.HessianException;
 public class AnnotationInvocationHandler implements InvocationHandler
 {
     private Class _annType;
-    private HashMap<String, Object> _valueMap;
+    private HashMap _valueMap;
 
     public AnnotationInvocationHandler(Class annType,
-                                       HashMap<String, Object> valueMap)
+                                       HashMap valueMap)
     {
         _annType = annType;
         _valueMap = valueMap;
@@ -104,8 +105,9 @@ public class AnnotationInvocationHandler implements InvocationHandler
         sb.append("[");
 
         boolean isFirst = true;
-        for (Map.Entry entry : _valueMap.entrySet())
+        for (Iterator it = _valueMap.entrySet().iterator(); it.hasNext();)
         {
+            Map.Entry entry = (Map.Entry) it.next();
             if (!isFirst)
             {
                 sb.append(", ");
