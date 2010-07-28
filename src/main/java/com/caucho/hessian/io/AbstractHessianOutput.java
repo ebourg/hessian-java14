@@ -172,7 +172,7 @@ abstract public class AbstractHessianOutput
     public void writeHeader(String name)
             throws IOException
     {
-        throw new UnsupportedOperationException(getClass().getSimpleName());
+        throw new UnsupportedOperationException(getClass().getName());
     }
 
     /**

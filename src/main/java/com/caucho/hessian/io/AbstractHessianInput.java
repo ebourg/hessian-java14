@@ -306,7 +306,7 @@ abstract public class AbstractHessianInput
     public org.w3c.dom.Node readNode()
             throws IOException
     {
-        throw new UnsupportedOperationException(getClass().getSimpleName());
+        throw new UnsupportedOperationException(getClass().getName());
     }
 
     /**

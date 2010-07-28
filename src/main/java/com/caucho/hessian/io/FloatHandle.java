@@ -79,6 +79,6 @@ public class FloatHandle implements Serializable
 
     public String toString()
     {
-        return getClass().getSimpleName() + "[" + _value + "]";
+        return getClass().getName() + "[" + _value + "]";
     }
 }

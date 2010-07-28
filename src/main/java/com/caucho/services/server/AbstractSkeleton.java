@@ -252,6 +252,6 @@ abstract public class AbstractSkeleton
 
     public String toString()
     {
-        return getClass().getSimpleName() + "[" + _apiClass.getName() + "]";
+        return getClass().getName() + "[" + _apiClass.getName() + "]";
     }
 }

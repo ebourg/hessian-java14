@@ -278,7 +278,7 @@ public class AnnotationSerializer extends AbstractSerializer
 
     static HessianException error(Method method, Throwable cause)
     {
-        String msg = (method.getDeclaringClass().getSimpleName()
+        String msg = (method.getDeclaringClass().getName()
                 + "." + method.getName() + "(): " + cause);
 
         throw new HessianMethodSerializationException(msg, cause);

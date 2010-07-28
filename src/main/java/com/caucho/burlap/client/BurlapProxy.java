@@ -130,7 +130,7 @@ public class BurlapProxy implements InvocationHandler
         }
         else if (methodName.equals("toString") && params.length == 0)
         {
-            return getClass().getSimpleName() + "[" + _url + "]";
+            return getClass().getName() + "[" + _url + "]";
         }
 
         InputStream is = null;
@@ -277,6 +277,6 @@ public class BurlapProxy implements InvocationHandler
 
     public String toString()
     {
-        return getClass().getSimpleName() + "[" + _url + "]";
+        return getClass().getName() + "[" + _url + "]";
     }
 }

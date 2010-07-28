@@ -93,6 +93,6 @@ public class ObjectDeserializer extends AbstractDeserializer
 
     public String toString()
     {
-        return getClass().getSimpleName() + "[" + _cl + "]";
+        return getClass().getName() + "[" + _cl + "]";
     }
 }
