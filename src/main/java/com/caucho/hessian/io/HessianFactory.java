@@ -51,8 +51,6 @@ package com.caucho.hessian.io;
 import java.util.logging.*;
 import java.io.*;
 
-import com.caucho.hessian.util.HessianFreeList;
-
 /**
  * Factory for creating HessianInput and HessianOutput streams.
  */
@@ -63,18 +61,6 @@ public class HessianFactory
 
     private SerializerFactory _serializerFactory;
     private SerializerFactory _defaultSerializerFactory;
-
-    private final HessianFreeList _freeHessian2Output
-            = new HessianFreeList(32);
-
-    private final HessianFreeList _freeHessianOutput
-            = new HessianFreeList(32);
-
-    private final HessianFreeList _freeHessian2Input
-            = new HessianFreeList(32);
-
-    private final HessianFreeList _freeHessianInput
-            = new HessianFreeList(32);
 
     public HessianFactory()
     {
@@ -156,17 +142,7 @@ public class HessianFactory
      */
     public Hessian2Output createHessian2Output(OutputStream os)
     {
-        Hessian2Output out = (Hessian2Output) _freeHessian2Output.allocate();
-
-        if (out != null)
-        {
-            out.init(os);
-        }
-        else
-        {
-            out = new Hessian2Output(os);
-        }
-
+        Hessian2Output out = new Hessian2Output(os);
         out.setSerializerFactory(_serializerFactory);
 
         return out;
@@ -183,8 +159,6 @@ public class HessianFactory
         }
 
         out.free();
-
-        _freeHessian2Output.free(out);
     }
 
     /**
