@@ -49,21 +49,131 @@
 package com.caucho.hessian.io;
 
 import java.io.*;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Deserializing a JDK 1.4 StackTraceElement
  */
-public class StackTraceElementDeserializer extends JavaDeserializer
+public class StackTraceElementDeserializer extends AbstractMapDeserializer
 {
-    public StackTraceElementDeserializer()
+    public Class getType()
     {
-        super(StackTraceElement.class);
+        return StackTraceElement.class;
     }
 
-    protected Object instantiate()
-            throws Exception
+    public Object readObject(AbstractHessianInput in, Object[] fieldNames) throws IOException
     {
-        return new StackTraceElement("", "", "", 0);
+        HashMap map = new HashMap();
+        
+        in.addRef(map);
+        
+        String declaringClass = null;
+        String methodName = null;
+        String fileName = null;
+        int lineNumber = 0;
+        
+        for (int i = 0; i < fieldNames.length; i++)
+        {
+            Object key = fieldNames[i];
+
+            if (key.equals("declaringClass"))
+            {
+                declaringClass = in.readString();
+            }
+            else if (key.equals("methodName"))
+            {
+                methodName = in.readString();
+            }
+            else if (key.equals("fileName"))
+            {
+                fileName = in.readString();
+            }
+            else if (key.equals("lineNumber"))
+            {
+                lineNumber = in.readInt();
+            }
+        }
+        
+        return createStackTraceElement(declaringClass, methodName, fileName, lineNumber);
+    }
+
+    private Object createStackTraceElement(String declaringClass, String methodName, String fileName, int lineNumber) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        DataOutputStream dos = new DataOutputStream(bos);
+        ObjectOutputStream oos = new ObjectOutputStream(dos);
+
+        oos.writeObject(StackTraceElement.class);
+
+        Throwable e1 = new IOException();
+        try
+        {
+            throw e1;
+        }
+        catch (Throwable e2)
+        {
+            e1 = e2;
+        }
+
+        dos.writeByte(ObjectStreamConstants.TC_OBJECT);
+        dos.writeByte(ObjectStreamConstants.TC_REFERENCE);
+        dos.writeShort(0x007e);
+        dos.writeShort(0);
+
+        dos.writeInt(lineNumber);
+
+        if (declaringClass != null)
+        {
+            dos.writeByte(ObjectStreamConstants.TC_STRING);
+            dos.writeUTF(declaringClass);
+        }
+        else
+        {
+            dos.writeByte(ObjectStreamConstants.TC_NULL);
+        }
+
+        if (fileName != null)
+        {
+            dos.writeByte(ObjectStreamConstants.TC_STRING);
+            dos.writeUTF(fileName);
+        }
+        else
+        {
+            dos.writeByte(ObjectStreamConstants.TC_NULL);
+        }
+
+        if (methodName != null)
+        {
+            dos.writeByte(ObjectStreamConstants.TC_STRING);
+            dos.writeUTF(methodName);
+        }
+        else
+        {
+            dos.writeByte(ObjectStreamConstants.TC_NULL);
+        }
+
+        oos.close();
+        dos.close();
+        bos.close();
+
+        byte[] data = bos.toByteArray();
+
+        try
+        {
+            ByteArrayInputStream bis = new ByteArrayInputStream(data);
+            ObjectInputStream ois = new ObjectInputStream(bis);
+
+            Object cl = ois.readObject();
+
+            Object obj = ois.readObject();
+
+            ois.close();
+            bis.close();
+
+            return obj;
+        }
+        catch (Throwable e)
+        {
+            return null;
+        }
     }
 }
