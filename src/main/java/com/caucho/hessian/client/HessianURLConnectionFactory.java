@@ -56,6 +56,7 @@ import java.io.IOException;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.lang.reflect.Method;
 
 /**
  * Internal factory for creating connections to the server.  The default
@@ -91,21 +92,39 @@ public class HessianURLConnectionFactory implements HessianConnectionFactory
         // conn.setDoInput(true);
 
         long connectTimeout = _proxyFactory.getConnectTimeout();
-
-        if (connectTimeout >= 0)
+        
+        if (connectTimeout > 0)
         {
-            conn.setConnectTimeout((int) connectTimeout);
+            try
+            {
+                // only available for JDK 1.5
+                Method method = conn.getClass().getMethod("setConnectTimeout", new Class[]{int.class});
+
+                if (method != null)
+                {
+                    method.invoke(conn, new Object[]{new Integer((int) connectTimeout)});
+                }
+            }
+            catch (Throwable e)
+            {
+            }
         }
 
         conn.setDoOutput(true);
 
         long readTimeout = _proxyFactory.getReadTimeout();
-
+        
         if (readTimeout > 0)
         {
             try
             {
-                conn.setReadTimeout((int) readTimeout);
+                // only available for JDK 1.5
+                Method method = conn.getClass().getMethod("setReadTimeout", new Class[]{int.class});
+
+                if (method != null)
+                {
+                    method.invoke(conn, new Object[]{new Integer((int) readTimeout)});
+                }
             }
             catch (Throwable e)
             {

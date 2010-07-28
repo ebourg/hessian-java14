@@ -65,6 +65,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Proxy;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -252,8 +253,33 @@ public class BurlapProxyFactory implements ServiceProxyFactory, ObjectFactory
             // clear old keepalive connections
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            conn.setConnectTimeout(10);
-            conn.setReadTimeout(10);
+            try
+            {
+                // only available for JDK 1.5
+                Method method = conn.getClass().getMethod("setConnectTimeout", new Class[]{int.class});
+
+                if (method != null)
+                {
+                    method.invoke(conn, new Object[]{new Integer((int) 10)});
+                }
+            }
+            catch (Throwable e)
+            {
+            }
+            
+            try
+            {
+                // only available for JDK 1.5
+                Method method = conn.getClass().getMethod("setReadTimeout", new Class[]{int.class});
+
+                if (method != null)
+                {
+                    method.invoke(conn, new Object[]{new Integer((int) 10)});
+                }
+            }
+            catch (Throwable e)
+            {
+            }
 
             conn.setRequestProperty("Connection", "close");
 
