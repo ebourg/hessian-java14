@@ -50,111 +50,12 @@ package com.caucho.services.server;
 
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 
 /**
  * Proxy class for Hessian services.
  */
 abstract public class AbstractSkeleton
 {
-    private Class _apiClass;
-    private Class _homeClass;
-    private Class _objectClass;
-
-    private HashMap _methodMap = new HashMap();
-
-    /**
-     * Create a new hessian skeleton.
-     *
-     * @param apiClass the API interface
-     */
-    protected AbstractSkeleton(Class apiClass)
-    {
-        _apiClass = apiClass;
-
-        Method[] methodList = apiClass.getMethods();
-
-        for (int i = 0; i < methodList.length; i++)
-        {
-            Method method = methodList[i];
-
-            if (_methodMap.get(method.getName()) == null)
-            {
-                _methodMap.put(method.getName(), methodList[i]);
-            }
-
-            Class[] param = method.getParameterTypes();
-            String mangledName = method.getName() + "__" + param.length;
-            _methodMap.put(mangledName, methodList[i]);
-
-            _methodMap.put(mangleName(method, false), methodList[i]);
-        }
-    }
-
-    /**
-     * Returns the API class of the current object.
-     */
-    public String getAPIClassName()
-    {
-        return _apiClass.getName();
-    }
-
-    /**
-     * Returns the API class of the factory/home.
-     */
-    public String getHomeClassName()
-    {
-        if (_homeClass != null)
-        {
-            return _homeClass.getName();
-        }
-        else
-        {
-            return getAPIClassName();
-        }
-    }
-
-    /**
-     * Sets the home API class.
-     */
-    public void setHomeClass(Class homeAPI)
-    {
-        _homeClass = homeAPI;
-    }
-
-    /**
-     * Returns the API class of the object URLs
-     */
-    public String getObjectClassName()
-    {
-        if (_objectClass != null)
-        {
-            return _objectClass.getName();
-        }
-        else
-        {
-            return getAPIClassName();
-        }
-    }
-
-    /**
-     * Sets the object API class.
-     */
-    public void setObjectClass(Class objectAPI)
-    {
-        _objectClass = objectAPI;
-    }
-
-    /**
-     * Returns the method by the mangled name.
-     *
-     * @param mangledName the name passed by the protocol
-     */
-    protected Method getMethod(String mangledName)
-    {
-        return (Method) _methodMap.get(mangledName);
-    }
-
     /**
      * Creates a unique mangled method name based on the method name and
      * the method parameters.
@@ -248,10 +149,5 @@ abstract public class AbstractSkeleton
                 return name;
             }
         }
-    }
-
-    public String toString()
-    {
-        return getClass().getName() + "[" + _apiClass.getName() + "]";
     }
 }
