@@ -1382,7 +1382,7 @@ public class HessianDebugState implements Hessian2Constants
 
         char _typeCode;
 
-        StringBuilder _value = new StringBuilder();
+        StringBuffer _value = new StringBuffer();
         int _lengthIndex;
         int _length;
         boolean _isLastChunk;

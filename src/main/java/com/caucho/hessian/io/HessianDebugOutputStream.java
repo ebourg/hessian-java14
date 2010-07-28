@@ -134,7 +134,7 @@ public class HessianDebugOutputStream extends OutputStream
     {
         private Logger _log;
         private Level _level;
-        private StringBuilder _sb = new StringBuilder();
+        private StringBuffer _sb = new StringBuffer();
 
         LogWriter(Logger log, Level level)
         {

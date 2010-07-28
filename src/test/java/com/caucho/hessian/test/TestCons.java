@@ -67,7 +67,7 @@ public class TestCons implements java.io.Serializable
 
         map.put(this, map.size());
 
-        StringBuilder sb = new StringBuilder();
+        StringBuffer sb = new StringBuffer();
         sb.append(getClass().getSimpleName()).append("[");
 
         if (_first instanceof TestCons)

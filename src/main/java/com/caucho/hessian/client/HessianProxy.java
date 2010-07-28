@@ -509,7 +509,7 @@ public class HessianProxy implements InvocationHandler, Serializable
     {
         private Logger _log;
         private Level _level = Level.FINEST;
-        private StringBuilder _sb = new StringBuilder();
+        private StringBuffer _sb = new StringBuffer();
 
         LogWriter(Logger log)
         {

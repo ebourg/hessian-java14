@@ -98,7 +98,7 @@ public class AnnotationInvocationHandler implements InvocationHandler
 
     public String toString()
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuffer sb = new StringBuffer();
 
         sb.append("@");
         sb.append(_annType.getName());

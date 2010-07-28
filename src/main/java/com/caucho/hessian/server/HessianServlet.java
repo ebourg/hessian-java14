@@ -461,7 +461,7 @@ public class HessianServlet extends GenericServlet
     static class LogWriter extends Writer
     {
         private Logger _log;
-        private StringBuilder _sb = new StringBuilder();
+        private StringBuffer _sb = new StringBuffer();
 
         LogWriter(Logger log)
         {

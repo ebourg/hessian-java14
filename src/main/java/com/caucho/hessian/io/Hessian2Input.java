@@ -363,7 +363,7 @@ public class Hessian2Input
         }
         else
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuffer sb = new StringBuffer();
             sb.append((char) tag);
 
             try
@@ -3984,7 +3984,7 @@ public class Hessian2Input
     private String buildDebugContext(byte[] buffer, int offset, int length,
                                      int errorOffset)
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuffer sb = new StringBuffer();
 
         sb.append("[");
         for (int i = 0; i < errorOffset; i++)
@@ -4005,7 +4005,7 @@ public class Hessian2Input
         return sb.toString();
     }
 
-    private void addDebugChar(StringBuilder sb, int ch)
+    private void addDebugChar(StringBuffer sb, int ch)
     {
         if (ch >= 0x20 && ch < 0x7f)
         {

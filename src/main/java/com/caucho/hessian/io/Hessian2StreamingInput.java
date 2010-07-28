@@ -278,7 +278,7 @@ public class Hessian2StreamingInput
             else if ((code & 0x80) != 0x80)
             {
                 int len = 256;
-                StringBuilder sb = new StringBuilder();
+                StringBuffer sb = new StringBuffer();
                 int ch;
 
                 while ((len-- > 0 && is.available() > 0 && (ch = is.read()) >= 0))

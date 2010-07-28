@@ -363,7 +363,7 @@ public class TestHessian2Servlet
 
     public String replyString_1023()
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuffer sb = new StringBuffer();
 
         for (int i = 0; i < 16; i++)
         {
@@ -377,7 +377,7 @@ public class TestHessian2Servlet
 
     public String replyString_1024()
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuffer sb = new StringBuffer();
 
         for (int i = 0; i < 16; i++)
         {
@@ -391,7 +391,7 @@ public class TestHessian2Servlet
 
     public String replyString_65536()
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuffer sb = new StringBuffer();
 
         for (int i = 0; i < 64 * 16; i++)
         {
@@ -432,7 +432,7 @@ public class TestHessian2Servlet
 
     public Object replyBinary_1023()
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuffer sb = new StringBuffer();
 
         for (int i = 0; i < 16; i++)
         {
@@ -446,7 +446,7 @@ public class TestHessian2Servlet
 
     public Object replyBinary_1024()
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuffer sb = new StringBuffer();
 
         for (int i = 0; i < 16; i++)
         {
@@ -460,7 +460,7 @@ public class TestHessian2Servlet
 
     public Object replyBinary_65536()
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuffer sb = new StringBuffer();
 
         for (int i = 0; i < 64 * 16; i++)
         {
