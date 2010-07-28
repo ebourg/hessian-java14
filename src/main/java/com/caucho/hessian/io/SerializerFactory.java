@@ -55,7 +55,6 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.lang.annotation.Annotation;
 import java.lang.ref.SoftReference;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -357,16 +356,6 @@ public class SerializerFactory extends AbstractSerializerFactory
             return EnumerationSerializer.create();
         }
 
-        else if (Enum.class.isAssignableFrom(cl))
-        {
-            return new EnumSerializer(cl);
-        }
-
-        else if (Annotation.class.isAssignableFrom(cl))
-        {
-            return new AnnotationSerializer(cl);
-        }
-
         return getDefaultSerializer(cl);
     }
 
@@ -491,11 +480,6 @@ public class SerializerFactory extends AbstractSerializerFactory
             deserializer = new MapDeserializer(cl);
         }
 
-        else if (Annotation.class.isAssignableFrom(cl))
-        {
-            deserializer = new AnnotationDeserializer(cl);
-        }
-
         else if (cl.isInterface())
         {
             deserializer = new ObjectDeserializer(cl);
@@ -509,11 +493,6 @@ public class SerializerFactory extends AbstractSerializerFactory
         else if (Enumeration.class.isAssignableFrom(cl))
         {
             deserializer = EnumerationDeserializer.create();
-        }
-
-        else if (Enum.class.isAssignableFrom(cl))
-        {
-            deserializer = new EnumDeserializer(cl);
         }
 
         else if (Class.class.equals(cl))
