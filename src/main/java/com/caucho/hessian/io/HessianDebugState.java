@@ -944,7 +944,7 @@ public class HessianDebugState implements Hessian2Constants
                     return new IntegerState(new RefState1(this), "ref");
 
                 default:
-                    printObject("x" + String.format("%02x", new Object[]{new Integer(ch)}));
+                    printObject("x" + Integer.toHexString(ch));
                     return this;
             }
         }
