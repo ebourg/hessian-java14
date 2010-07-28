@@ -65,7 +65,7 @@ public class TestCons implements java.io.Serializable
             return "#" + ref;
         }
 
-        map.put(this, map.size());
+        map.put(this, new Integer(map.size()));
 
         StringBuffer sb = new StringBuffer();
         sb.append(getClass().getName()).append("[");

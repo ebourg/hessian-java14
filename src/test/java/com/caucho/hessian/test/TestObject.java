@@ -18,6 +18,11 @@ public class TestObject implements java.io.Serializable
         _value = value;
     }
 
+    public TestObject(int value)
+    {
+        this._value = new Integer(value);
+    }
+
     public Object getValue()
     {
         return _value;

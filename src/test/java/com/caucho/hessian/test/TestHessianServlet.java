@@ -19,8 +19,8 @@ public class TestHessianServlet
         extends HessianServlet
         implements Test
 {
-    private ThreadLocal<CharArrayWriter> _threadWriter
-            = new ThreadLocal<CharArrayWriter>();
+    private ThreadLocal _threadWriter
+            = new ThreadLocal();
 
     /**
      * Does nothing.

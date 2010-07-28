@@ -19,8 +19,8 @@ public class TestHessian2Servlet
         extends HessianServlet
         implements TestHessian2
 {
-    private ThreadLocal<CharArrayWriter> _threadWriter
-            = new ThreadLocal<CharArrayWriter>();
+    private ThreadLocal _threadWriter
+            = new ThreadLocal();
 
     public void methodNull()
     {
@@ -40,12 +40,12 @@ public class TestHessian2Servlet
 
     public Object replyTrue()
     {
-        return true;
+        return Boolean.TRUE;
     }
 
     public Object replyFalse()
     {
-        return false;
+        return Boolean.FALSE;
     }
 
     //
@@ -565,7 +565,7 @@ public class TestHessian2Servlet
     public Object replyUntypedMap_1()
     {
         HashMap map = new HashMap();
-        map.put("a", 0);
+        map.put("a", new Integer(0));
 
         return map;
     }
@@ -574,8 +574,8 @@ public class TestHessian2Servlet
     {
         HashMap map = new HashMap();
 
-        map.put(0, "a");
-        map.put(1, "b");
+        map.put(new Integer(0), "a");
+        map.put(new Integer(1), "b");
 
         return map;
     }
@@ -587,7 +587,7 @@ public class TestHessian2Servlet
         ArrayList list = new ArrayList();
         list.add("a");
 
-        map.put(list, 0);
+        map.put(list, new Integer(0));
 
         return map;
     }
@@ -605,7 +605,7 @@ public class TestHessian2Servlet
     {
         Map map = new Hashtable();
 
-        map.put("a", 0);
+        map.put("a", new Integer(0));
 
         return map;
     }
@@ -614,8 +614,8 @@ public class TestHessian2Servlet
     {
         Map map = new Hashtable();
 
-        map.put(0, "a");
-        map.put(1, "b");
+        map.put(new Integer(0), "a");
+        map.put(new Integer(1), "b");
 
         return map;
     }
@@ -627,7 +627,7 @@ public class TestHessian2Servlet
         ArrayList list = new ArrayList();
         list.add("a");
 
-        map.put(list, 0);
+        map.put(list, new Integer(0));
 
         return map;
     }
@@ -721,7 +721,7 @@ public class TestHessian2Servlet
     {
         if (v == null)
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -731,7 +731,7 @@ public class TestHessian2Servlet
     {
         if (Boolean.TRUE.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -741,7 +741,7 @@ public class TestHessian2Servlet
     {
         if (Boolean.FALSE.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -753,11 +753,11 @@ public class TestHessian2Servlet
     {
         if (v instanceof Integer)
         {
-            Integer value = (Integer) v;
+            int value = ((Integer) v).intValue();
 
             if (value == 0)
             {
-                return true;
+                return Boolean.TRUE;
             }
         }
 
@@ -768,11 +768,11 @@ public class TestHessian2Servlet
     {
         if (v instanceof Integer)
         {
-            Integer value = (Integer) v;
+            int value = ((Integer) v).intValue();
 
             if (value == 1)
             {
-                return true;
+                return Boolean.TRUE;
             }
         }
 
@@ -783,11 +783,11 @@ public class TestHessian2Servlet
     {
         if (v instanceof Integer)
         {
-            Integer value = (Integer) v;
+            int value = ((Integer) v).intValue();
 
             if (value == 47)
             {
-                return true;
+                return Boolean.TRUE;
             }
         }
 
@@ -798,11 +798,11 @@ public class TestHessian2Servlet
     {
         if (v instanceof Integer)
         {
-            Integer value = (Integer) v;
+            int value = ((Integer) v).intValue();
 
             if (value == -16)
             {
-                return true;
+                return Boolean.TRUE;
             }
         }
 
@@ -815,11 +815,11 @@ public class TestHessian2Servlet
     {
         if (v instanceof Integer)
         {
-            Integer value = (Integer) v;
+            int value = ((Integer) v).intValue();
 
             if (value == 0x30)
             {
-                return true;
+                return Boolean.TRUE;
             }
         }
 
@@ -830,11 +830,11 @@ public class TestHessian2Servlet
     {
         if (v instanceof Integer)
         {
-            Integer value = (Integer) v;
+            int value = ((Integer) v).intValue();
 
             if (value == 0x7ff)
             {
-                return true;
+                return Boolean.TRUE;
             }
         }
 
@@ -845,11 +845,11 @@ public class TestHessian2Servlet
     {
         if (v instanceof Integer)
         {
-            Integer value = (Integer) v;
+            int value = ((Integer) v).intValue();
 
             if (value == -17)
             {
-                return true;
+                return Boolean.TRUE;
             }
         }
 
@@ -860,11 +860,11 @@ public class TestHessian2Servlet
     {
         if (v instanceof Integer)
         {
-            Integer value = (Integer) v;
+            int value = ((Integer) v).intValue();
 
             if (value == -0x800)
             {
-                return true;
+                return Boolean.TRUE;
             }
         }
 
@@ -875,11 +875,11 @@ public class TestHessian2Servlet
     {
         if (v instanceof Integer)
         {
-            Integer value = (Integer) v;
+            int value = ((Integer) v).intValue();
 
             if (value == 0x800)
             {
-                return true;
+                return Boolean.TRUE;
             }
         }
 
@@ -890,11 +890,11 @@ public class TestHessian2Servlet
     {
         if (v instanceof Integer)
         {
-            Integer value = (Integer) v;
+            int value = ((Integer) v).intValue();
 
             if (value == 0x3ffff)
             {
-                return true;
+                return Boolean.TRUE;
             }
         }
 
@@ -905,11 +905,11 @@ public class TestHessian2Servlet
     {
         if (v instanceof Integer)
         {
-            Integer value = (Integer) v;
+            int value = ((Integer) v).intValue();
 
             if (value == -0x801)
             {
-                return true;
+                return Boolean.TRUE;
             }
         }
 
@@ -920,11 +920,11 @@ public class TestHessian2Servlet
     {
         if (v instanceof Integer)
         {
-            Integer value = (Integer) v;
+            int value = ((Integer) v).intValue();
 
             if (value == -0x40000)
             {
-                return true;
+                return Boolean.TRUE;
             }
         }
 
@@ -937,11 +937,11 @@ public class TestHessian2Servlet
     {
         if (v instanceof Integer)
         {
-            Integer value = (Integer) v;
+            int value = ((Integer) v).intValue();
 
             if (value == 0x40000)
             {
-                return true;
+                return Boolean.TRUE;
             }
         }
 
@@ -952,11 +952,11 @@ public class TestHessian2Servlet
     {
         if (v instanceof Integer)
         {
-            Integer value = (Integer) v;
+            int value = ((Integer) v).intValue();
 
             if (value == 0x7fffffff)
             {
-                return true;
+                return Boolean.TRUE;
             }
         }
 
@@ -967,11 +967,11 @@ public class TestHessian2Servlet
     {
         if (v instanceof Integer)
         {
-            Integer value = (Integer) v;
+            int value = ((Integer) v).intValue();
 
             if (value == -0x40001)
             {
-                return true;
+                return Boolean.TRUE;
             }
         }
 
@@ -982,11 +982,11 @@ public class TestHessian2Servlet
     {
         if (v instanceof Integer)
         {
-            Integer value = (Integer) v;
+            int value = ((Integer) v).intValue();
 
             if (value == -0x80000000)
             {
-                return true;
+                return Boolean.TRUE;
             }
         }
 
@@ -999,9 +999,9 @@ public class TestHessian2Servlet
 
     public Object argLong_0(Object v)
     {
-        if (v.equals(replyLong_0()))
+        if (v.equals(new Long(replyLong_0())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1009,9 +1009,9 @@ public class TestHessian2Servlet
 
     public Object argLong_1(Object v)
     {
-        if (v.equals(replyLong_1()))
+        if (v.equals(new Long(replyLong_1())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1019,9 +1019,9 @@ public class TestHessian2Servlet
 
     public Object argLong_15(Object v)
     {
-        if (v.equals(replyLong_15()))
+        if (v.equals(new Long(replyLong_15())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1029,9 +1029,9 @@ public class TestHessian2Servlet
 
     public Object argLong_m8(Object v)
     {
-        if (v.equals(replyLong_m8()))
+        if (v.equals(new Long(replyLong_m8())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1041,9 +1041,9 @@ public class TestHessian2Servlet
 
     public Object argLong_0x10(Object v)
     {
-        if (v.equals(replyLong_0x10()))
+        if (v.equals(new Long(replyLong_0x10())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1051,9 +1051,9 @@ public class TestHessian2Servlet
 
     public Object argLong_0x7ff(Object v)
     {
-        if (v.equals(replyLong_0x7ff()))
+        if (v.equals(new Long(replyLong_0x7ff())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1061,9 +1061,9 @@ public class TestHessian2Servlet
 
     public Object argLong_m9(Object v)
     {
-        if (v.equals(replyLong_m9()))
+        if (v.equals(new Long(replyLong_m9())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1071,9 +1071,9 @@ public class TestHessian2Servlet
 
     public Object argLong_m0x800(Object v)
     {
-        if (v.equals(replyLong_m0x800()))
+        if (v.equals(new Long(replyLong_m0x800())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1081,9 +1081,9 @@ public class TestHessian2Servlet
 
     public Object argLong_0x800(Object v)
     {
-        if (v.equals(replyLong_0x800()))
+        if (v.equals(new Long(replyLong_0x800())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1091,9 +1091,9 @@ public class TestHessian2Servlet
 
     public Object argLong_0x3ffff(Object v)
     {
-        if (v.equals(replyLong_0x3ffff()))
+        if (v.equals(new Long(replyLong_0x3ffff())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1101,9 +1101,9 @@ public class TestHessian2Servlet
 
     public Object argLong_m0x801(Object v)
     {
-        if (v.equals(replyLong_m0x801()))
+        if (v.equals(new Long(replyLong_m0x801())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1111,9 +1111,9 @@ public class TestHessian2Servlet
 
     public Object argLong_m0x40000(Object v)
     {
-        if (v.equals(replyLong_m0x40000()))
+        if (v.equals(new Long(replyLong_m0x40000())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1123,9 +1123,9 @@ public class TestHessian2Servlet
 
     public Object argLong_0x40000(Object v)
     {
-        if (v.equals(replyLong_0x40000()))
+        if (v.equals(new Long(replyLong_0x40000())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1133,9 +1133,9 @@ public class TestHessian2Servlet
 
     public Object argLong_0x7fffffff(Object v)
     {
-        if (v.equals(replyLong_0x7fffffff()))
+        if (v.equals(new Long(replyLong_0x7fffffff())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1143,9 +1143,9 @@ public class TestHessian2Servlet
 
     public Object argLong_m0x40001(Object v)
     {
-        if (v.equals(replyLong_m0x40001()))
+        if (v.equals(new Long(replyLong_m0x40001())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1153,9 +1153,9 @@ public class TestHessian2Servlet
 
     public Object argLong_m0x80000000(Object v)
     {
-        if (v.equals(replyLong_m0x80000000()))
+        if (v.equals(new Long(replyLong_m0x80000000())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1163,9 +1163,9 @@ public class TestHessian2Servlet
 
     public Object argLong_0x80000000(Object v)
     {
-        if (v.equals(replyLong_0x80000000()))
+        if (v.equals(new Long(replyLong_0x80000000())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1173,9 +1173,9 @@ public class TestHessian2Servlet
 
     public Object argLong_m0x80000001(Object v)
     {
-        if (v.equals(replyLong_m0x80000001()))
+        if (v.equals(new Long(replyLong_m0x80000001())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1194,9 +1194,9 @@ public class TestHessian2Servlet
      */
     public Object argDouble_0_0(Object v)
     {
-        if (v.equals(replyDouble_0_0()))
+        if (v.equals(new Double(replyDouble_0_0())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1211,9 +1211,9 @@ public class TestHessian2Servlet
      */
     public Object argDouble_1_0(Object v)
     {
-        if (v.equals(replyDouble_1_0()))
+        if (v.equals(new Double(replyDouble_1_0())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1228,9 +1228,9 @@ public class TestHessian2Servlet
      */
     public Object argDouble_2_0(Object v)
     {
-        if (v.equals(replyDouble_2_0()))
+        if (v.equals(new Double(replyDouble_2_0())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1245,9 +1245,9 @@ public class TestHessian2Servlet
      */
     public Object argDouble_127_0(Object v)
     {
-        if (v.equals(replyDouble_127_0()))
+        if (v.equals(new Double(replyDouble_127_0())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1262,9 +1262,9 @@ public class TestHessian2Servlet
      */
     public Object argDouble_m128_0(Object v)
     {
-        if (v.equals(replyDouble_m128_0()))
+        if (v.equals(new Double(replyDouble_m128_0())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1279,9 +1279,9 @@ public class TestHessian2Servlet
      */
     public Object argDouble_128_0(Object v)
     {
-        if (v.equals(replyDouble_128_0()))
+        if (v.equals(new Double(replyDouble_128_0())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1296,9 +1296,9 @@ public class TestHessian2Servlet
      */
     public Object argDouble_m129_0(Object v)
     {
-        if (v.equals(replyDouble_m129_0()))
+        if (v.equals(new Double(replyDouble_m129_0())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1313,9 +1313,9 @@ public class TestHessian2Servlet
      */
     public Object argDouble_32767_0(Object v)
     {
-        if (v.equals(replyDouble_32767_0()))
+        if (v.equals(new Double(replyDouble_32767_0())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1330,9 +1330,9 @@ public class TestHessian2Servlet
      */
     public Object argDouble_m32768_0(Object v)
     {
-        if (v.equals(replyDouble_m32768_0()))
+        if (v.equals(new Double(replyDouble_m32768_0())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1347,9 +1347,9 @@ public class TestHessian2Servlet
      */
     public Object argDouble_0_001(Object v)
     {
-        if (v.equals(replyDouble_0_001()))
+        if (v.equals(new Double(replyDouble_0_001())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1364,9 +1364,9 @@ public class TestHessian2Servlet
      */
     public Object argDouble_m0_001(Object v)
     {
-        if (v.equals(replyDouble_m0_001()))
+        if (v.equals(new Double(replyDouble_m0_001())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1381,9 +1381,9 @@ public class TestHessian2Servlet
      */
     public Object argDouble_65_536(Object v)
     {
-        if (v.equals(replyDouble_65_536()))
+        if (v.equals(new Double(replyDouble_65_536())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1398,9 +1398,9 @@ public class TestHessian2Servlet
      */
     public Object argDouble_3_14159(Object v)
     {
-        if (v.equals(replyDouble_3_14159()))
+        if (v.equals(new Double(replyDouble_3_14159())))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1414,7 +1414,7 @@ public class TestHessian2Servlet
     {
         if (v.equals(replyDate_0()))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1424,7 +1424,7 @@ public class TestHessian2Servlet
     {
         if (v.equals(replyDate_1()))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1434,7 +1434,7 @@ public class TestHessian2Servlet
     {
         if (v.equals(replyDate_2()))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1450,7 +1450,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1462,7 +1462,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1474,7 +1474,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1486,7 +1486,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1498,7 +1498,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1510,7 +1510,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1522,7 +1522,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1538,7 +1538,7 @@ public class TestHessian2Servlet
 
         if (equals(expect, v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1550,7 +1550,7 @@ public class TestHessian2Servlet
 
         if (equals(expect, v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1562,7 +1562,7 @@ public class TestHessian2Servlet
 
         if (equals(expect, v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1574,7 +1574,7 @@ public class TestHessian2Servlet
 
         if (equals(expect, v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1586,7 +1586,7 @@ public class TestHessian2Servlet
 
         if (equals(expect, v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1598,7 +1598,7 @@ public class TestHessian2Servlet
 
         if (equals(expect, v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1610,7 +1610,7 @@ public class TestHessian2Servlet
 
         if (equals(expect, v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1626,7 +1626,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1638,7 +1638,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1650,7 +1650,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1662,7 +1662,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1674,7 +1674,7 @@ public class TestHessian2Servlet
 
         if (v instanceof String[] && equals(expect, (String[]) v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1686,7 +1686,7 @@ public class TestHessian2Servlet
 
         if (v instanceof String[] && equals(expect, (String[]) v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1698,7 +1698,7 @@ public class TestHessian2Servlet
 
         if (v instanceof String[] && equals(expect, (String[]) v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1710,7 +1710,7 @@ public class TestHessian2Servlet
 
         if (v instanceof String[] && equals(expect, (String[]) v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1726,7 +1726,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1738,7 +1738,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1750,7 +1750,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1762,7 +1762,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1778,7 +1778,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1790,7 +1790,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1802,7 +1802,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1814,7 +1814,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1830,7 +1830,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1842,7 +1842,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1854,7 +1854,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1866,7 +1866,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1878,7 +1878,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1890,7 +1890,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1902,7 +1902,7 @@ public class TestHessian2Servlet
 
         if (expect.equals(v))
         {
-            return true;
+            return Boolean.TRUE;
         }
 
         return getInputDebug();
@@ -1963,7 +1963,7 @@ public class TestHessian2Servlet
 
     protected String getInputDebug()
     {
-        CharArrayWriter writer = _threadWriter.get();
+        CharArrayWriter writer = (CharArrayWriter) _threadWriter.get();
         if (writer != null)
         {
             return writer.toString();
