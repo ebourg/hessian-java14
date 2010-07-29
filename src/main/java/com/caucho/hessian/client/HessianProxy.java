@@ -238,10 +238,6 @@ public class HessianProxy implements InvocationHandler, Serializable
                 throw new HessianProtocolException("'" + (char) code + "' is an unknown code");
             }
         }
-        catch (HessianProtocolException e)
-        {
-            throw new HessianRuntimeException(e);
-        }
         finally
         {
             try
