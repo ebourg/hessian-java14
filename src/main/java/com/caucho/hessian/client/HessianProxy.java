@@ -195,17 +195,6 @@ public class HessianProxy implements InvocationHandler, Serializable
 
             is = conn.getInputStream();
 
-            if (log.isLoggable(Level.FINEST))
-            {
-                PrintWriter dbg = new PrintWriter(new LogWriter(log));
-                HessianDebugInputStream dIs
-                        = new HessianDebugInputStream(is, dbg);
-
-                dIs.startTop2();
-
-                is = dIs;
-            }
-
             AbstractHessianInput in;
 
             int code = is.read();
@@ -320,14 +309,6 @@ public class HessianProxy implements InvocationHandler, Serializable
             catch (Exception e)
             {
                 throw new HessianRuntimeException(e);
-            }
-
-            if (log.isLoggable(Level.FINEST))
-            {
-                PrintWriter dbg = new PrintWriter(new LogWriter(log));
-                HessianDebugOutputStream dOs = new HessianDebugOutputStream(os, dbg);
-                dOs.startTop2();
-                os = dOs;
             }
 
             AbstractHessianOutput out = _factory.getHessianOutput(os);

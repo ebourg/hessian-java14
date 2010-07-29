@@ -134,7 +134,6 @@ public class HessianProxyFactory implements ServiceProxyFactory, ObjectFactory
     private boolean _isHessian2Request = false;
 
     private boolean _isChunkedPost = true;
-    private boolean _isDebug = false;
 
     private long _readTimeout = -1;
     private long _connectTimeout = -1;
@@ -213,22 +212,6 @@ public class HessianProxyFactory implements ServiceProxyFactory, ObjectFactory
         }
 
         return _connFactory;
-    }
-
-    /**
-     * Sets the debug
-     */
-    public void setDebug(boolean isDebug)
-    {
-        _isDebug = isDebug;
-    }
-
-    /**
-     * Gets the debug
-     */
-    public boolean isDebug()
-    {
-        return _isDebug;
     }
 
     /**
@@ -476,14 +459,7 @@ public class HessianProxyFactory implements ServiceProxyFactory, ObjectFactory
 
     public AbstractHessianInput getHessian1Input(InputStream is)
     {
-        AbstractHessianInput in;
-
-        if (_isDebug)
-        {
-            is = new HessianDebugInputStream(is, new PrintWriter(System.out));
-        }
-
-        in = new HessianInput(is);
+        AbstractHessianInput in = new HessianInput(is);
 
         in.setRemoteResolver(getRemoteResolver());
 
@@ -494,14 +470,7 @@ public class HessianProxyFactory implements ServiceProxyFactory, ObjectFactory
 
     public AbstractHessianInput getHessian2Input(InputStream is)
     {
-        AbstractHessianInput in;
-
-        if (_isDebug)
-        {
-            is = new HessianDebugInputStream(is, new PrintWriter(System.out));
-        }
-
-        in = new Hessian2Input(is);
+        AbstractHessianInput in = new Hessian2Input(is);
 
         in.setRemoteResolver(getRemoteResolver());
 
