@@ -111,8 +111,6 @@ public class HessianProxyFactory
     private boolean _isHessian2Reply = true;
     private boolean _isHessian2Request = false;
 
-    private boolean _isChunkedPost = true;
-
     private long _readTimeout = -1;
     private long _connectTimeout = -1;
 
@@ -182,22 +180,6 @@ public class HessianProxyFactory
     public void setOverloadEnabled(boolean isOverloadEnabled)
     {
         _isOverloadEnabled = isOverloadEnabled;
-    }
-
-    /**
-     * Set true if should use chunked encoding on the request.
-     */
-    public void setChunkedPost(boolean isChunked)
-    {
-        _isChunkedPost = isChunked;
-    }
-
-    /**
-     * Set true if should use chunked encoding on the request.
-     */
-    public boolean isChunkedPost()
-    {
-        return _isChunkedPost;
     }
 
     /**
@@ -321,18 +303,6 @@ public class HessianProxyFactory
             }
         }
 
-        /*
-        // Used chunked mode when available, i.e. JDK 1.5.
-        if (_proxyFactory.isChunkedPost() && conn instanceof HttpURLConnection) {
-          try {
-        HttpURLConnection httpConn = (HttpURLConnection) conn;
-    
-        httpConn.setChunkedStreamingMode(8 * 1024);
-          } catch (Throwable e) {
-          }
-        }
-        */
-
         return new HessianConnection(url, conn);
     }
 
@@ -455,7 +425,7 @@ public class HessianProxyFactory
     {
         StringBuffer cb = new StringBuffer();
 
-        int i = 0;
+        int i;
         for (i = 0; i + 2 < value.length(); i += 3)
         {
             long chunk = (int) value.charAt(i);

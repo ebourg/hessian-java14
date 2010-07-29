@@ -67,9 +67,6 @@ public class HessianConnection
     private URL _url;
     private URLConnection _conn;
 
-    private int _statusCode;
-    private String _statusMessage;
-
     HessianConnection(URL url, URLConnection conn)
     {
         _url = url;
@@ -102,7 +99,7 @@ public class HessianConnection
         {
             HttpURLConnection httpConn = (HttpURLConnection) _conn;
 
-            _statusCode = 500;
+            int _statusCode = 500;
 
             try
             {
@@ -143,8 +140,6 @@ public class HessianConnection
                             sb.append((char) ch);
                         }
                     }
-
-                    _statusMessage = sb.toString();
                 }
                 catch (FileNotFoundException e)
                 {
@@ -175,22 +170,6 @@ public class HessianConnection
     protected void parseResponseHeaders(HttpURLConnection conn)
             throws IOException
     {
-    }
-
-    /**
-     * Returns the status code.
-     */
-    public int getStatusCode()
-    {
-        return _statusCode;
-    }
-
-    /**
-     * Returns the status string.
-     */
-    public String getStatusMessage()
-    {
-        return _statusMessage;
     }
 
     /**
