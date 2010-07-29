@@ -159,18 +159,6 @@ public class AbstractDeserializer implements Deserializer
         return new HessianProtocolException(msg);
     }
 
-    protected String codeName(int ch)
-    {
-        if (ch < 0)
-        {
-            return "end of file";
-        }
-        else
-        {
-            return "0x" + Integer.toHexString(ch & 0xff);
-        }
-    }
-
     /**
      * The NullDeserializer exists as a marker for the factory classes so
      * they save a null result.

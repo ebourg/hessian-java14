@@ -220,11 +220,6 @@ public class IdentityIntMap
         }
     }
 
-    protected int hashCode(Object value)
-    {
-        return System.identityHashCode(value);
-    }
-
     public String toString()
     {
         StringBuffer sbuf = new StringBuffer();

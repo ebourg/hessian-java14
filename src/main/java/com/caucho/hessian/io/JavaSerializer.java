@@ -179,28 +179,6 @@ public class JavaSerializer extends AbstractSerializer
         return null;
     }
 
-    /**
-     * Returns the writeReplace method
-     */
-    protected Method getWriteReplace(Class cl, Class param)
-    {
-        for (; cl != null; cl = cl.getSuperclass())
-        {
-            for (int i = 0; i < cl.getDeclaredMethods().length; i++)
-            {
-                Method method = cl.getDeclaredMethods()[i];
-                if (method.getName().equals("writeReplace")
-                        && method.getParameterTypes().length == 1
-                        && param.equals(method.getParameterTypes()[0]))
-                {
-                    return method;
-                }
-            }
-        }
-
-        return null;
-    }
-
     public void writeObject(Object obj, AbstractHessianOutput out)
             throws IOException
     {
