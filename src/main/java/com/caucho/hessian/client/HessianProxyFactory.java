@@ -49,7 +49,6 @@
 package com.caucho.hessian.client;
 
 import com.caucho.hessian.io.*;
-import com.caucho.services.client.ServiceProxyFactory;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -94,7 +93,7 @@ import java.net.URL;
  * <p>The proxy can use HTTP basic authentication if the user and the
  * password are set.
  */
-public class HessianProxyFactory implements ServiceProxyFactory
+public class HessianProxyFactory
 {
     private final ClassLoader _loader;
 
@@ -376,10 +375,10 @@ public class HessianProxyFactory implements ServiceProxyFactory
      * @param url the URL where the client object is located.
      * @return a proxy to the object with the specified interface.
      */
-    public Object create(Class api, String urlName)
+    public Object create(Class api, String url)
             throws MalformedURLException
     {
-        return create(api, urlName, _loader);
+        return create(api, url, _loader);
     }
 
     /**
