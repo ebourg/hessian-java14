@@ -112,24 +112,6 @@ public class HessianFactory
     }
 
     /**
-     * Creates a new Hessian 2.0 deserializer.
-     */
-    public Hessian2StreamingInput createHessian2StreamingInput(InputStream is)
-    {
-        Hessian2StreamingInput in = new Hessian2StreamingInput(is);
-        in.setSerializerFactory(_serializerFactory);
-
-        return in;
-    }
-
-    /**
-     * Frees a Hessian 2.0 deserializer
-     */
-    public void freeHessian2StreamingInput(Hessian2StreamingInput in)
-    {
-    }
-
-    /**
      * Creates a new Hessian 1.0 deserializer.
      */
     public HessianInput createHessianInput(InputStream is)
@@ -159,29 +141,6 @@ public class HessianFactory
         }
 
         out.free();
-    }
-
-    /**
-     * Creates a new Hessian 2.0 serializer.
-     */
-    public Hessian2StreamingOutput createHessian2StreamingOutput(OutputStream os)
-    {
-        Hessian2Output out = createHessian2Output(os);
-
-        return new Hessian2StreamingOutput(out);
-    }
-
-    /**
-     * Frees a Hessian 2.0 serializer
-     */
-    public void freeHessian2StreamingOutput(Hessian2StreamingOutput out)
-    {
-        if (out == null)
-        {
-            return;
-        }
-
-        freeHessian2Output(out.getHessian2Output());
     }
 
     /**
