@@ -348,33 +348,6 @@ public class HessianProxyFactory
     }
 
     /**
-     * Creates a new proxy with the specified URL.  The API class uses
-     * the java.api.class value from _hessian_
-     *
-     * @param url the URL where the client object is located.
-     * @return a proxy to the object with the specified interface.
-     */
-    public Object create(String url)
-            throws MalformedURLException, ClassNotFoundException
-    {
-        HessianMetaInfoAPI metaInfo;
-
-        metaInfo = (HessianMetaInfoAPI) create(HessianMetaInfoAPI.class, url);
-
-        String apiClassName =
-                (String) metaInfo._hessian_getAttribute("java.api.class");
-
-        if (apiClassName == null)
-        {
-            throw new HessianRuntimeException(url + " has an unknown api.");
-        }
-
-        Class apiClass = Class.forName(apiClassName, false, _loader);
-
-        return create(apiClass, url);
-    }
-
-    /**
      * Creates a new proxy with the specified URL.  The returned object
      * is a proxy with the interface specified by api.
      *

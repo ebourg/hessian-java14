@@ -290,25 +290,14 @@ public class HessianProxy implements InvocationHandler, Serializable
     protected HessianConnection sendRequest(String methodName, Object[] args)
             throws IOException
     {
-        HessianConnection conn;
-
-        conn = _factory.openConnection(_url);
+        HessianConnection conn = _factory.openConnection(_url);
         boolean isValid = false;
 
         try
         {
             addRequestHeaders(conn);
 
-            OutputStream os;
-
-            try
-            {
-                os = conn.getOutputStream();
-            }
-            catch (Exception e)
-            {
-                throw new HessianRuntimeException(e);
-            }
+            OutputStream os = conn.getOutputStream();
 
             AbstractHessianOutput out = _factory.getHessianOutput(os);
 
