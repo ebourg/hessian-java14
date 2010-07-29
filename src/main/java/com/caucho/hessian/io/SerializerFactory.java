@@ -49,7 +49,6 @@
 package com.caucho.hessian.io;
 
 import java.io.*;
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -51,17 +51,12 @@ package com.caucho.hessian.client;
 import com.caucho.hessian.io.*;
 import com.caucho.services.client.ServiceProxyFactory;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.HttpURLConnection;
-import java.net.URLConnection;
-import java.util.Hashtable;
 
 /**
  * Factory for creating Hessian client stubs.  The returned stub will
