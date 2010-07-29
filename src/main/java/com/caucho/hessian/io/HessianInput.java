@@ -51,7 +51,6 @@ package com.caucho.hessian.io;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
@@ -155,145 +154,6 @@ public class HessianInput extends AbstractHessianInput
     }
 
     /**
-     * Returns the calls method
-     */
-    public String getMethod()
-    {
-        return _method;
-    }
-
-    /**
-     * Returns any reply fault.
-     */
-    public Throwable getReplyFault()
-    {
-        return _replyFault;
-    }
-
-    /**
-     * Starts reading the call
-     *
-     * <pre>
-     * c major minor
-     * </pre>
-     */
-    public int readCall()
-            throws IOException
-    {
-        int tag = read();
-
-        if (tag != 'c')
-        {
-            throw error("expected hessian call ('c') at " + codeName(tag));
-        }
-
-        int major = read();
-        int minor = read();
-
-        return (major << 16) + minor;
-    }
-
-    /**
-     * For backward compatibility with HessianSkeleton
-     */
-    public void skipOptionalCall()
-            throws IOException
-    {
-        int tag = read();
-
-        if (tag == 'c')
-        {
-            read();
-            read();
-        }
-        else
-        {
-            _peek = tag;
-        }
-    }
-
-    /**
-     * Starts reading the call
-     *
-     * <p>A successful completion will have a single value:
-     *
-     * <pre>
-     * m b16 b8 method
-     * </pre>
-     */
-    public String readMethod()
-            throws IOException
-    {
-        int tag = read();
-
-        if (tag != 'm')
-        {
-            throw error("expected hessian method ('m') at " + codeName(tag));
-        }
-        int d1 = read();
-        int d2 = read();
-
-        _isLastChunk = true;
-        _chunkLength = d1 * 256 + d2;
-        _sbuf.setLength(0);
-        int ch;
-        while ((ch = parseChar()) >= 0)
-        {
-            _sbuf.append((char) ch);
-        }
-
-        _method = _sbuf.toString();
-
-        return _method;
-    }
-
-    /**
-     * Starts reading the call, including the headers.
-     *
-     * <p>The call expects the following protocol data
-     *
-     * <pre>
-     * c major minor
-     * m b16 b8 method
-     * </pre>
-     */
-    public void startCall()
-            throws IOException
-    {
-        readCall();
-
-        while (readHeader() != null)
-        {
-            readObject();
-        }
-
-        readMethod();
-    }
-
-    /**
-     * Completes reading the call
-     *
-     * <p>A successful completion will have a single value:
-     *
-     * <pre>
-     * z
-     * </pre>
-     */
-    public void completeCall()
-            throws IOException
-    {
-        int tag = read();
-
-        if (tag == 'z')
-        {
-        }
-        else
-        {
-            throw error("expected end of call ('z') at " + codeName(tag) + ".  Check method arguments and ensure method overloading is enabled if necessary");
-        }
-    }
-
-    /**
      * Reads a reply as an object.
      * If the reply has a fault, throws the exception.
      */
@@ -325,31 +185,6 @@ public class HessianInput extends AbstractHessianInput
 
             return value;
         }
-    }
-
-    /**
-     * Starts reading the reply
-     *
-     * <p>A successful completion will have a single value:
-     *
-     * <pre>
-     * r
-     * </pre>
-     */
-    public void startReply()
-            throws Throwable
-    {
-        int tag = read();
-
-        if (tag != 'r')
-        {
-            error("expected hessian reply at " + codeName(tag));
-        }
-
-        int major = read();
-        int minor = read();
-
-        startReplyBody();
     }
 
     public void startReplyBody()
@@ -447,60 +282,6 @@ public class HessianInput extends AbstractHessianInput
     }
 
     /**
-     * Reads a header, returning null if there are no headers.
-     *
-     * <pre>
-     * H b16 b8 value
-     * </pre>
-     */
-    public String readHeader()
-            throws IOException
-    {
-        int tag = read();
-
-        if (tag == 'H')
-        {
-            _isLastChunk = true;
-            _chunkLength = (read() << 8) + read();
-
-            _sbuf.setLength(0);
-            int ch;
-            while ((ch = parseChar()) >= 0)
-            {
-                _sbuf.append((char) ch);
-            }
-
-            return _sbuf.toString();
-        }
-
-        _peek = tag;
-
-        return null;
-    }
-
-    /**
-     * Reads a null
-     *
-     * <pre>
-     * N
-     * </pre>
-     */
-    public void readNull()
-            throws IOException
-    {
-        int tag = read();
-
-        switch (tag)
-        {
-            case 'N':
-                return;
-
-            default:
-                throw expect("null", tag);
-        }
-    }
-
-    /**
      * Reads a boolean
      *
      * <pre>
@@ -532,21 +313,6 @@ public class HessianInput extends AbstractHessianInput
                 throw expect("boolean", tag);
         }
     }
-
-    /**
-     * Reads a byte
-     *
-     * <pre>
-     * I b32 b24 b16 b8
-     * </pre>
-     */
-    /*
-    public byte readByte()
-      throws IOException
-    {
-      return (byte) readInt();
-    }
-    */
 
     /**
      * Reads a short
@@ -892,37 +658,6 @@ public class HessianInput extends AbstractHessianInput
     }
 
     /**
-     * Reads an XML node.
-     *
-     * <pre>
-     * S b16 b8 string value
-     * </pre>
-     */
-    public org.w3c.dom.Node readNode()
-            throws IOException
-    {
-        int tag = read();
-
-        switch (tag)
-        {
-            case 'N':
-                return null;
-
-            case 'S':
-            case 's':
-            case 'X':
-            case 'x':
-                _isLastChunk = tag == 'S' || tag == 'X';
-                _chunkLength = (read() << 8) + read();
-
-                throw error("Can't handle string in this context");
-
-            default:
-                throw expect("string", tag);
-        }
-    }
-
-    /**
      * Reads a byte array
      *
      * <pre>
@@ -1006,93 +741,6 @@ public class HessianInput extends AbstractHessianInput
 
             default:
                 throw new IOException("expected 'B' at " + (char) tag);
-        }
-    }
-
-    /**
-     * Reads a byte array from the stream.
-     */
-    public int readBytes(byte[] buffer, int offset, int length)
-            throws IOException
-    {
-        int readLength = 0;
-
-        if (_chunkLength == END_OF_DATA)
-        {
-            _chunkLength = 0;
-            return -1;
-        }
-        else if (_chunkLength == 0)
-        {
-            int tag = read();
-
-            switch (tag)
-            {
-                case 'N':
-                    return -1;
-
-                case 'B':
-                case 'b':
-                    _isLastChunk = tag == 'B';
-                    _chunkLength = (read() << 8) + read();
-                    break;
-
-                default:
-                    throw new IOException("expected 'B' at " + (char) tag);
-            }
-        }
-
-        while (length > 0)
-        {
-            if (_chunkLength > 0)
-            {
-                buffer[offset++] = (byte) read();
-                _chunkLength--;
-                length--;
-                readLength++;
-            }
-            else if (_isLastChunk)
-            {
-                if (readLength == 0)
-                {
-                    return -1;
-                }
-                else
-                {
-                    _chunkLength = END_OF_DATA;
-                    return readLength;
-                }
-            }
-            else
-            {
-                int tag = read();
-
-                switch (tag)
-                {
-                    case 'B':
-                    case 'b':
-                        _isLastChunk = tag == 'B';
-                        _chunkLength = (read() << 8) + read();
-                        break;
-
-                    default:
-                        throw new IOException("expected 'B' at " + (char) tag);
-                }
-            }
-        }
-
-        if (readLength == 0)
-        {
-            return -1;
-        }
-        else if (_chunkLength > 0 || !_isLastChunk)
-        {
-            return readLength;
-        }
-        else
-        {
-            _chunkLength = END_OF_DATA;
-            return readLength;
         }
     }
 
@@ -1321,15 +969,6 @@ public class HessianInput extends AbstractHessianInput
             default:
                 throw error("unknown code for readObject at " + codeName(tag));
         }
-    }
-
-    /**
-     * Reads a reference.
-     */
-    public Object readRef()
-            throws IOException
-    {
-        return _refs.get(parseInt());
     }
 
     /**
@@ -1823,11 +1462,6 @@ public class HessianInput extends AbstractHessianInput
     public void close()
     {
         _is = null;
-    }
-
-    public Reader getReader()
-    {
-        return null;
     }
 
     protected IOException expect(String expect, int ch)

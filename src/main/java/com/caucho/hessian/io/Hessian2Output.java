@@ -97,8 +97,6 @@ public class Hessian2Output
     private final byte[] _buffer = new byte[SIZE];
     private int _offset;
 
-    private boolean _isPacket;
-
     /**
      * Creates a new Hessian output stream, initialized with an
      * underlying output stream.
@@ -172,82 +170,6 @@ public class Hessian2Output
     }
 
     /**
-     * Writes the call tag.  This would be followed by the
-     * method and the arguments
-     *
-     * <code><pre>
-     * C
-     * </pre></code>
-     *
-     * @param method the method name to call.
-     */
-    public void startCall()
-            throws IOException
-    {
-        flushIfFull();
-
-        _buffer[_offset++] = (byte) 'C';
-    }
-
-    /**
-     * Starts an envelope.
-     *
-     * <code><pre>
-     * E major minor
-     * m b16 b8 method-name
-     * </pre></code>
-     *
-     * @param method the method name to call.
-     */
-    public void startEnvelope(String method)
-            throws IOException
-    {
-        int offset = _offset;
-
-        if (SIZE < offset + 32)
-        {
-            flushBuffer();
-            offset = _offset;
-        }
-
-        _buffer[_offset++] = (byte) 'E';
-
-        writeString(method);
-    }
-
-    /**
-     * Completes an envelope.
-     *
-     * <p>A successful completion will have a single value:
-     *
-     * <pre>
-     * Z
-     * </pre>
-     */
-    public void completeEnvelope()
-            throws IOException
-    {
-        flushIfFull();
-
-        _buffer[_offset++] = (byte) 'Z';
-    }
-
-    /**
-     * Writes the method tag.
-     *
-     * <code><pre>
-     * string
-     * </pre></code>
-     *
-     * @param method the method name to call.
-     */
-    public void writeMethod(String method)
-            throws IOException
-    {
-        writeString(method);
-    }
-
-    /**
      * Completes.
      *
      * <code><pre>
@@ -264,25 +186,6 @@ public class Hessian2Output
         */
     }
 
-    /**
-     * Starts the reply
-     *
-     * <p>A successful completion will have a single value:
-     *
-     * <pre>
-     * R
-     * </pre>
-     */
-    public void startReply()
-            throws IOException
-    {
-        writeVersion();
-
-        flushIfFull();
-
-        _buffer[_offset++] = (byte) 'R';
-    }
-
     public void writeVersion()
             throws IOException
     {
@@ -291,109 +194,6 @@ public class Hessian2Output
         _buffer[_offset++] = (byte) 'H';
         _buffer[_offset++] = (byte) 2;
         _buffer[_offset++] = (byte) 0;
-    }
-
-    /**
-     * Completes reading the reply
-     *
-     * <p>A successful completion will have a single value:
-     *
-     * <pre>
-     * z
-     * </pre>
-     */
-    public void completeReply()
-            throws IOException
-    {
-    }
-
-    /**
-     * Starts a packet
-     *
-     * <p>A message contains several objects encapsulated by a length</p>
-     *
-     * <pre>
-     * p x02 x00
-     * </pre>
-     */
-    public void startMessage()
-            throws IOException
-    {
-        flushIfFull();
-
-        _buffer[_offset++] = (byte) 'p';
-        _buffer[_offset++] = (byte) 2;
-        _buffer[_offset++] = (byte) 0;
-    }
-
-    /**
-     * Completes reading the message
-     *
-     * <p>A successful completion will have a single value:
-     *
-     * <pre>
-     * z
-     * </pre>
-     */
-    public void completeMessage()
-            throws IOException
-    {
-        flushIfFull();
-
-        _buffer[_offset++] = (byte) 'z';
-    }
-
-    /**
-     * Writes a fault.  The fault will be written
-     * as a descriptive string followed by an object:
-     *
-     * <code><pre>
-     * F map
-     * </pre></code>
-     *
-     * <code><pre>
-     * F H
-     * \x04code
-     * \x10the fault code
-     *
-     * \x07message
-     * \x11the fault message
-     *
-     * \x06detail
-     * M\xnnjavax.ejb.FinderException
-     *     ...
-     * Z
-     * Z
-     * </pre></code>
-     *
-     * @param code the fault code, a three digit
-     */
-    public void writeFault(String code, String message, Object detail)
-            throws IOException
-    {
-        flushIfFull();
-
-        writeVersion();
-
-        _buffer[_offset++] = (byte) 'F';
-        _buffer[_offset++] = (byte) 'H';
-
-        _refs.put(new Object(), _refs.size(), false);
-
-        writeString("code");
-        writeString(code);
-
-        writeString("message");
-        writeString(message);
-
-        if (detail != null)
-        {
-            writeString("detail");
-            writeObject(detail);
-        }
-
-        flushIfFull();
-        _buffer[_offset++] = (byte) 'Z';
     }
 
     /**
@@ -586,14 +386,6 @@ public class Hessian2Output
             throws IOException
     {
         writeInt(len);
-    }
-
-    /**
-     * Writes the tail of the object definition to the stream.
-     */
-    public void writeObjectEnd()
-            throws IOException
-    {
     }
 
     /**
@@ -1149,40 +941,6 @@ public class Hessian2Output
      *
      * @param value the string value to write.
      */
-    public void writeBytes(byte[] buffer)
-            throws IOException
-    {
-        if (buffer == null)
-        {
-            if (SIZE < _offset + 16)
-            {
-                flushBuffer();
-            }
-
-            _buffer[_offset++] = 'N';
-        }
-        else
-        {
-            writeBytes(buffer, 0, buffer.length);
-        }
-    }
-
-    /**
-     * Writes a byte array to the stream.
-     * The array will be written with the following syntax:
-     *
-     * <code><pre>
-     * B b16 b18 bytes
-     * </pre></code>
-     *
-     * If the value is null, it will be written as
-     *
-     * <code><pre>
-     * N
-     * </pre></code>
-     *
-     * @param value the string value to write.
-     */
     public void writeBytes(byte[] buffer, int offset, int length)
             throws IOException
     {
@@ -1416,131 +1174,6 @@ public class Hessian2Output
     }
 
     /**
-     * Starts the streaming message
-     *
-     * <p>A streaming message starts with 'P'</p>
-     *
-     * <pre>
-     * P x02 x00
-     * </pre>
-     */
-    public void writeStreamingObject(Object obj)
-            throws IOException
-    {
-        startPacket();
-
-        writeObject(obj);
-
-        endPacket();
-    }
-
-    /**
-     * Starts a streaming packet
-     *
-     * <p>A streaming contains a set of chunks, ending with a zero chunk.
-     * Each chunk is a length followed by data where the length is
-     * encoded by (b1xxxxxxxx)* b0xxxxxxxx</p>
-     */
-    public void startPacket()
-            throws IOException
-    {
-        if (_refs != null)
-        {
-            _refs.clear();
-        }
-
-        flushBuffer();
-
-        _isPacket = true;
-        _offset = 3;
-        _buffer[0] = (byte) 0x55;
-        _buffer[1] = (byte) 0x55;
-        _buffer[2] = (byte) 0x55;
-    }
-
-    public void endPacket()
-            throws IOException
-    {
-        int offset = _offset;
-
-        OutputStream os = _os;
-
-        if (os == null)
-        {
-            _offset = 0;
-            return;
-        }
-
-        int len = offset - 3;
-
-        _buffer[0] = (byte) (0x80);
-        _buffer[1] = (byte) (0x80 + ((len >> 7) & 0x7f));
-        _buffer[2] = (byte) (len & 0x7f);
-
-        // end chunk
-        _buffer[offset++] = (byte) 0x80;
-        _buffer[offset++] = (byte) 0x00;
-
-        _isPacket = false;
-        _offset = 0;
-
-        if (os != null)
-        {
-            if (len == 0)
-            {
-                os.write(_buffer, 1, 2);
-            }
-            else if (len < 0x80)
-            {
-                os.write(_buffer, 1, offset - 1);
-            }
-            else
-            {
-                os.write(_buffer, 0, offset);
-            }
-        }
-    }
-
-    /**
-     * Prints a string to the stream, encoded as UTF-8 with preceeding length
-     *
-     * @param v the string to print.
-     */
-    public void printLenString(String v)
-            throws IOException
-    {
-        if (SIZE < _offset + 16)
-        {
-            flushBuffer();
-        }
-
-        if (v == null)
-        {
-            _buffer[_offset++] = (byte) (0);
-            _buffer[_offset++] = (byte) (0);
-        }
-        else
-        {
-            int len = v.length();
-            _buffer[_offset++] = (byte) (len >> 8);
-            _buffer[_offset++] = (byte) (len);
-
-            printString(v, 0, len);
-        }
-    }
-
-    /**
-     * Prints a string to the stream, encoded as UTF-8
-     *
-     * @param v the string to print.
-     */
-    public void printString(String v)
-            throws IOException
-    {
-        printString(v, 0, v.length());
-    }
-
-    /**
      * Prints a string to the stream, encoded as UTF-8
      *
      * @param v the string to print.
@@ -1653,7 +1286,7 @@ public class Hessian2Output
 
         OutputStream os = _os;
 
-        if (!_isPacket && offset > 0)
+        if (offset > 0)
         {
             _offset = 0;
             if (os != null)
@@ -1661,33 +1294,6 @@ public class Hessian2Output
                 os.write(_buffer, 0, offset);
             }
         }
-        else if (_isPacket && offset > 3)
-        {
-            int len = offset - 3;
-            _buffer[0] = (byte) 0x80;
-            _buffer[1] = (byte) (0x80 + ((len >> 7) & 0x7f));
-            _buffer[2] = (byte) (len & 0x7f);
-            _offset = 3;
-
-            if (os != null)
-            {
-                os.write(_buffer, 0, offset);
-            }
-
-            _buffer[0] = (byte) 0x56;
-            _buffer[1] = (byte) 0x56;
-            _buffer[2] = (byte) 0x56;
-
-        }
-    }
-
-    public void close()
-            throws IOException
-    {
-        // hessian/3a8c
-        flush();
-
-        _os = null;
     }
 
     /**
@@ -1703,7 +1309,6 @@ public class Hessian2Output
         _classRefs.clear();
         _typeRefs = null;
         _offset = 0;
-        _isPacket = false;
     }
 
 }

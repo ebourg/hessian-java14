@@ -50,8 +50,6 @@ package com.caucho.hessian.io;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
 
 /**
  * Abstract base class for Hessian requests.  Hessian users should only
@@ -68,20 +66,6 @@ import java.io.Reader;
  */
 abstract public class AbstractHessianInput
 {
-    private byte[] _buffer;
-
-    /**
-     * Initialize the Hessian stream with the underlying input stream.
-     */
-    public void init(InputStream is)
-    {
-    }
-
-    /**
-     * Returns the call's method
-     */
-    abstract public String getMethod();
-
     /**
      * Sets the serializer factory.
      */
@@ -90,99 +74,10 @@ abstract public class AbstractHessianInput
     }
 
     /**
-     * Reads the call
-     *
-     * <pre>
-     * c major minor
-     * </pre>
-     */
-    abstract public int readCall()
-            throws IOException;
-
-    /**
-     * For backward compatibility with HessianSkeleton
-     */
-    public void skipOptionalCall()
-            throws IOException
-    {
-    }
-
-    /**
-     * Reads a header, returning null if there are no headers.
-     *
-     * <pre>
-     * H b16 b8 value
-     * </pre>
-     */
-    abstract public String readHeader()
-            throws IOException;
-
-    /**
-     * Starts reading the call
-     *
-     * <p>A successful completion will have a single value:
-     *
-     * <pre>
-     * m b16 b8 method
-     * </pre>
-     */
-    abstract public String readMethod()
-            throws IOException;
-
-    /**
-     * Reads the number of method arguments
-     *
-     * @return -1 for a variable length (hessian 1.0)
-     */
-    public int readMethodArgLength()
-            throws IOException
-    {
-        return -1;
-    }
-
-    /**
-     * Starts reading the call, including the headers.
-     *
-     * <p>The call expects the following protocol data
-     *
-     * <pre>
-     * c major minor
-     * m b16 b8 method
-     * </pre>
-     */
-    abstract public void startCall()
-            throws IOException;
-
-    /**
-     * Completes reading the call
-     *
-     * <p>The call expects the following protocol data
-     *
-     * <pre>
-     * Z
-     * </pre>
-     */
-    abstract public void completeCall()
-            throws IOException;
-
-    /**
      * Reads a reply as an object.
      * If the reply has a fault, throws the exception.
      */
     abstract public Object readReply(Class expectedClass)
-            throws Throwable;
-
-    /**
-     * Starts reading the reply
-     *
-     * <p>A successful completion will have a single value:
-     *
-     * <pre>
-     * r
-     * v
-     * </pre>
-     */
-    abstract public void startReply()
             throws Throwable;
 
     /**
@@ -215,16 +110,6 @@ abstract public class AbstractHessianInput
      * </pre>
      */
     abstract public boolean readBoolean()
-            throws IOException;
-
-    /**
-     * Reads a null
-     *
-     * <pre>
-     * N
-     * </pre>
-     */
-    abstract public void readNull()
             throws IOException;
 
     /**
@@ -279,33 +164,6 @@ abstract public class AbstractHessianInput
             throws IOException;
 
     /**
-     * Reads an XML node encoded in UTF-8
-     *
-     * <pre>
-     * x b16 b8 non-final xml chunk
-     * X b16 b8 final xml chunk
-     * </pre>
-     */
-    public org.w3c.dom.Node readNode()
-            throws IOException
-    {
-        throw new UnsupportedOperationException(getClass().getName());
-    }
-
-    /**
-     * Starts reading a string.  All the characters must be read before
-     * calling the next method.  The actual characters will be read with
-     * the reader's read() or read(char [], int, int).
-     *
-     * <pre>
-     * s b16 b8 non-final string chunk
-     * S b16 b8 final string chunk
-     * </pre>
-     */
-    abstract public Reader getReader()
-            throws IOException;
-
-    /**
      * Starts reading a byte array using an input stream.  All the bytes
      * must be read before calling the following method.
      *
@@ -316,46 +174,6 @@ abstract public class AbstractHessianInput
      */
     abstract public InputStream readInputStream()
             throws IOException;
-
-    /**
-     * Reads data to an output stream.
-     *
-     * <pre>
-     * b b16 b8 non-final binary chunk
-     * B b16 b8 final binary chunk
-     * </pre>
-     */
-    public boolean readToOutputStream(OutputStream os)
-            throws IOException
-    {
-        InputStream is = readInputStream();
-
-        if (is == null)
-        {
-            return false;
-        }
-
-        if (_buffer == null)
-        {
-            _buffer = new byte[256];
-        }
-
-        try
-        {
-            int len;
-
-            while ((len = is.read(_buffer, 0, _buffer.length)) > 0)
-            {
-                os.write(_buffer, 0, len);
-            }
-
-            return true;
-        }
-        finally
-        {
-            is.close();
-        }
-    }
 
 
     /**
@@ -381,16 +199,6 @@ abstract public class AbstractHessianInput
      * Reads an arbitrary object from the input stream.
      */
     abstract public Object readObject()
-            throws IOException;
-
-    /**
-     * Reads a reference
-     *
-     * <pre>
-     * R b32 b24 b16 b8
-     * </pre>
-     */
-    abstract public Object readRef()
             throws IOException;
 
     /**

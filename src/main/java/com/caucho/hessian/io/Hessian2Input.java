@@ -78,15 +78,11 @@ public class Hessian2Input
     private static final Logger log
             = Logger.getLogger(Hessian2Input.class.getName());
 
-    private static final int END_OF_DATA = -2;
-
     private static Field _detailMessageField;
 
     private static final int SIZE = 256;
     private static final int GAP = 16;
 
-    // standard, unmodified factory for deserializing objects
-    protected SerializerFactory _defaultSerializerFactory;
     // factory for deserializing objects in the input stream
     protected SerializerFactory _serializerFactory;
 
@@ -104,10 +100,6 @@ public class Hessian2Input
     // a peek character
     private int _offset;
     private int _length;
-
-    // the method for a call
-    private String _method;
-    private Throwable _replyFault;
 
     private StringBuffer _sbuf = new StringBuffer();
 
@@ -138,21 +130,6 @@ public class Hessian2Input
     /**
      * Gets the serializer factory.
      */
-    public SerializerFactory getSerializerFactory()
-    {
-        // the default serializer factory cannot be modified by external
-        // callers
-        if (_serializerFactory == _defaultSerializerFactory)
-        {
-            _serializerFactory = new SerializerFactory();
-        }
-
-        return _serializerFactory;
-    }
-
-    /**
-     * Gets the serializer factory.
-     */
     protected final SerializerFactory findSerializerFactory()
     {
         SerializerFactory factory = _serializerFactory;
@@ -160,174 +137,10 @@ public class Hessian2Input
         if (factory == null)
         {
             factory = SerializerFactory.createDefault();
-            _defaultSerializerFactory = factory;
             _serializerFactory = factory;
         }
 
         return factory;
-    }
-
-    /**
-     * Returns the calls method
-     */
-    public String getMethod()
-    {
-        return _method;
-    }
-
-    /**
-     * Returns any reply fault.
-     */
-    public Throwable getReplyFault()
-    {
-        return _replyFault;
-    }
-
-    /**
-     * Starts reading the call
-     *
-     * <pre>
-     * c major minor
-     * </pre>
-     */
-    public int readCall()
-            throws IOException
-    {
-        int tag = read();
-
-        if (tag != 'C')
-        {
-            throw error("expected hessian call ('C') at " + codeName(tag));
-        }
-
-        return 0;
-    }
-
-    /**
-     * Starts reading the envelope
-     *
-     * <pre>
-     * E major minor
-     * </pre>
-     */
-    public int readEnvelope()
-            throws IOException
-    {
-        int tag = read();
-        int version = 0;
-
-        if (tag == 'H')
-        {
-            int major = read();
-            int minor = read();
-
-            version = (major << 16) + minor;
-
-            tag = read();
-        }
-
-        if (tag != 'E')
-        {
-            throw error("expected hessian Envelope ('E') at " + codeName(tag));
-        }
-
-        return version;
-    }
-
-    /**
-     * Completes reading the envelope
-     *
-     * <p>A successful completion will have a single value:
-     *
-     * <pre>
-     * Z
-     * </pre>
-     */
-    public void completeEnvelope()
-            throws IOException
-    {
-        int tag = read();
-
-        if (tag != 'Z')
-        {
-            error("expected end of envelope at " + codeName(tag));
-        }
-    }
-
-    /**
-     * Starts reading the call
-     *
-     * <p>A successful completion will have a single value:
-     *
-     * <pre>
-     * string
-     * </pre>
-     */
-    public String readMethod()
-            throws IOException
-    {
-        _method = readString();
-
-        return _method;
-    }
-
-    /**
-     * Returns the number of method arguments
-     *
-     * <pre>
-     * int
-     * </pre>
-     */
-    public int readMethodArgLength()
-            throws IOException
-    {
-        return readInt();
-    }
-
-    /**
-     * Starts reading the call, including the headers.
-     *
-     * <p>The call expects the following protocol data
-     *
-     * <pre>
-     * c major minor
-     * m b16 b8 method
-     * </pre>
-     */
-    public void startCall()
-            throws IOException
-    {
-        readCall();
-
-        readMethod();
-    }
-
-    public Object[] readArguments()
-            throws IOException
-    {
-        int len = readInt();
-
-        Object[] args = new Object[len];
-
-        for (int i = 0; i < len; i++)
-        {
-            args[i] = readObject();
-        }
-
-        return args;
-    }
-
-    /**
-     * Completes reading the call
-     *
-     * <p>A successful completion will have a single value:
-     *
-     * <pre>
-     * </pre>
-     */
-    public void completeCall()
-            throws IOException
-    {
     }
 
     /**
@@ -374,23 +187,6 @@ public class Hessian2Input
     }
 
     /**
-     * Starts reading the reply
-     *
-     * <p>A successful completion will have a single value:
-     *
-     * <pre>
-     * r
-     * </pre>
-     */
-    public void startReply()
-            throws Throwable
-    {
-        // XXX: for variable length (?)
-
-        readReply(Object.class);
-    }
-
-    /**
      * Prepares the fault.
      */
     private Throwable prepareFault(HashMap fault)
@@ -401,7 +197,7 @@ public class Hessian2Input
 
         if (detail instanceof Throwable)
         {
-            _replyFault = (Throwable) detail;
+            Throwable _replyFault = (Throwable) detail;
 
             if (message != null && _detailMessageField != null)
             {
@@ -421,9 +217,7 @@ public class Hessian2Input
         {
             String code = (String) fault.get("code");
 
-            _replyFault = new HessianServiceException(message, code, detail);
-
-            return _replyFault;
+            return new HessianServiceException(message, code, detail);
         }
     }
 
@@ -439,110 +233,6 @@ public class Hessian2Input
     public void completeReply()
             throws IOException
     {
-    }
-
-    /**
-     * Completes reading the call
-     *
-     * <p>A successful completion will have a single value:
-     *
-     * <pre>
-     * z
-     * </pre>
-     */
-    public void completeValueReply()
-            throws IOException
-    {
-        int tag = read();
-
-        if (tag != 'Z')
-        {
-            error("expected end of reply at " + codeName(tag));
-        }
-    }
-
-    /**
-     * Reads a header, returning null if there are no headers.
-     *
-     * <pre>
-     * H b16 b8 value
-     * </pre>
-     */
-    public String readHeader()
-            throws IOException
-    {
-        return null;
-    }
-
-    /**
-     * Starts reading a packet
-     *
-     * <pre>
-     * p major minor
-     * </pre>
-     */
-    public int startMessage()
-            throws IOException
-    {
-        int tag = read();
-
-        if (tag == 'p')
-        {
-        }
-        else if (tag == 'P')
-        {
-        }
-        else
-        {
-            throw error("expected Hessian message ('p') at " + codeName(tag));
-        }
-
-        int major = read();
-        int minor = read();
-
-        return (major << 16) + minor;
-    }
-
-    /**
-     * Completes reading the message
-     *
-     * <p>A successful completion will have a single value:
-     *
-     * <pre>
-     * z
-     * </pre>
-     */
-    public void completeMessage()
-            throws IOException
-    {
-        int tag = read();
-
-        if (tag != 'Z')
-        {
-            error("expected end of message at " + codeName(tag));
-        }
-    }
-
-    /**
-     * Reads a null
-     *
-     * <pre>
-     * N
-     * </pre>
-     */
-    public void readNull()
-            throws IOException
-    {
-        int tag = read();
-
-        switch (tag)
-        {
-            case 'N':
-                return;
-
-            default:
-                throw expect("null", tag);
-        }
     }
 
     /**
@@ -781,19 +471,6 @@ public class Hessian2Input
             default:
                 throw expect("boolean", tag);
         }
-    }
-
-    /**
-     * Reads a short
-     *
-     * <pre>
-     * I b32 b24 b16 b8
-     * </pre>
-     */
-    public short readShort()
-            throws IOException
-    {
-        return (short) readInt();
     }
 
     /**
@@ -1237,19 +914,6 @@ public class Hessian2Input
     }
 
     /**
-     * Reads a float
-     *
-     * <pre>
-     * D b64 b56 b48 b40 b32 b24 b16 b8
-     * </pre>
-     */
-    public float readFloat()
-            throws IOException
-    {
-        return (float) readDouble();
-    }
-
-    /**
      * Reads a double
      *
      * <pre>
@@ -1487,235 +1151,6 @@ public class Hessian2Input
         else
         {
             throw expect("date", tag);
-        }
-    }
-
-    /**
-     * Reads a byte from the stream.
-     */
-    public int readChar()
-            throws IOException
-    {
-        if (_chunkLength > 0)
-        {
-            _chunkLength--;
-            if (_chunkLength == 0 && _isLastChunk)
-            {
-                _chunkLength = END_OF_DATA;
-            }
-
-            int ch = parseUTF8Char();
-            return ch;
-        }
-        else if (_chunkLength == END_OF_DATA)
-        {
-            _chunkLength = 0;
-            return -1;
-        }
-
-        int tag = read();
-
-        switch (tag)
-        {
-            case 'N':
-                return -1;
-
-            case 'S':
-            case BC_STRING_CHUNK:
-                _isLastChunk = tag == 'S';
-                _chunkLength = (read() << 8) + read();
-
-                _chunkLength--;
-                int value = parseUTF8Char();
-
-                // special code so successive read byte won't
-                // be read as a single object.
-                if (_chunkLength == 0 && _isLastChunk)
-                {
-                    _chunkLength = END_OF_DATA;
-                }
-
-                return value;
-
-            default:
-                throw expect("char", tag);
-        }
-    }
-
-    /**
-     * Reads a byte array from the stream.
-     */
-    public int readString(char[] buffer, int offset, int length)
-            throws IOException
-    {
-        int readLength = 0;
-
-        if (_chunkLength == END_OF_DATA)
-        {
-            _chunkLength = 0;
-            return -1;
-        }
-        else if (_chunkLength == 0)
-        {
-            int tag = read();
-
-            switch (tag)
-            {
-                case 'N':
-                    return -1;
-
-                case 'S':
-                case BC_STRING_CHUNK:
-                    _isLastChunk = tag == 'S';
-                    _chunkLength = (read() << 8) + read();
-                    break;
-
-                case 0x00:
-                case 0x01:
-                case 0x02:
-                case 0x03:
-                case 0x04:
-                case 0x05:
-                case 0x06:
-                case 0x07:
-                case 0x08:
-                case 0x09:
-                case 0x0a:
-                case 0x0b:
-                case 0x0c:
-                case 0x0d:
-                case 0x0e:
-                case 0x0f:
-
-                case 0x10:
-                case 0x11:
-                case 0x12:
-                case 0x13:
-                case 0x14:
-                case 0x15:
-                case 0x16:
-                case 0x17:
-                case 0x18:
-                case 0x19:
-                case 0x1a:
-                case 0x1b:
-                case 0x1c:
-                case 0x1d:
-                case 0x1e:
-                case 0x1f:
-                    _isLastChunk = true;
-                    _chunkLength = tag - 0x00;
-                    break;
-
-                case 0x30:
-                case 0x31:
-                case 0x32:
-                case 0x33:
-                    _isLastChunk = true;
-                    _chunkLength = (tag - 0x30) * 256 + read();
-                    break;
-
-                default:
-                    throw expect("string", tag);
-            }
-        }
-
-        while (length > 0)
-        {
-            if (_chunkLength > 0)
-            {
-                buffer[offset++] = (char) parseUTF8Char();
-                _chunkLength--;
-                length--;
-                readLength++;
-            }
-            else if (_isLastChunk)
-            {
-                if (readLength == 0)
-                {
-                    return -1;
-                }
-                else
-                {
-                    _chunkLength = END_OF_DATA;
-                    return readLength;
-                }
-            }
-            else
-            {
-                int tag = read();
-
-                switch (tag)
-                {
-                    case 'S':
-                    case BC_STRING_CHUNK:
-                        _isLastChunk = tag == 'S';
-                        _chunkLength = (read() << 8) + read();
-                        break;
-
-                    case 0x00:
-                    case 0x01:
-                    case 0x02:
-                    case 0x03:
-                    case 0x04:
-                    case 0x05:
-                    case 0x06:
-                    case 0x07:
-                    case 0x08:
-                    case 0x09:
-                    case 0x0a:
-                    case 0x0b:
-                    case 0x0c:
-                    case 0x0d:
-                    case 0x0e:
-                    case 0x0f:
-
-                    case 0x10:
-                    case 0x11:
-                    case 0x12:
-                    case 0x13:
-                    case 0x14:
-                    case 0x15:
-                    case 0x16:
-                    case 0x17:
-                    case 0x18:
-                    case 0x19:
-                    case 0x1a:
-                    case 0x1b:
-                    case 0x1c:
-                    case 0x1d:
-                    case 0x1e:
-                    case 0x1f:
-                        _isLastChunk = true;
-                        _chunkLength = tag - 0x00;
-                        break;
-
-                    case 0x30:
-                    case 0x31:
-                    case 0x32:
-                    case 0x33:
-                        _isLastChunk = true;
-                        _chunkLength = (tag - 0x30) * 256 + read();
-                        break;
-
-                    default:
-                        throw expect("string", tag);
-                }
-            }
-        }
-
-        if (readLength == 0)
-        {
-            return -1;
-        }
-        else if (_chunkLength > 0 || !_isLastChunk)
-        {
-            return readLength;
-        }
-        else
-        {
-            _chunkLength = END_OF_DATA;
-            return readLength;
         }
     }
 
@@ -2115,259 +1550,6 @@ public class Hessian2Input
     }
 
     /**
-     * Reads a byte from the stream.
-     */
-    public int readByte()
-            throws IOException
-    {
-        if (_chunkLength > 0)
-        {
-            _chunkLength--;
-            if (_chunkLength == 0 && _isLastChunk)
-            {
-                _chunkLength = END_OF_DATA;
-            }
-
-            return read();
-        }
-        else if (_chunkLength == END_OF_DATA)
-        {
-            _chunkLength = 0;
-            return -1;
-        }
-
-        int tag = read();
-
-        switch (tag)
-        {
-            case 'N':
-                return -1;
-
-            case 'B':
-            case BC_BINARY_CHUNK:
-            {
-                _isLastChunk = tag == 'B';
-                _chunkLength = (read() << 8) + read();
-
-                int value = parseByte();
-
-                // special code so successive read byte won't
-                // be read as a single object.
-                if (_chunkLength == 0 && _isLastChunk)
-                {
-                    _chunkLength = END_OF_DATA;
-                }
-
-                return value;
-            }
-
-            case 0x20:
-            case 0x21:
-            case 0x22:
-            case 0x23:
-            case 0x24:
-            case 0x25:
-            case 0x26:
-            case 0x27:
-            case 0x28:
-            case 0x29:
-            case 0x2a:
-            case 0x2b:
-            case 0x2c:
-            case 0x2d:
-            case 0x2e:
-            case 0x2f:
-            {
-                _isLastChunk = true;
-                _chunkLength = tag - 0x20;
-
-                int value = parseByte();
-
-                // special code so successive read byte won't
-                // be read as a single object.
-                if (_chunkLength == 0)
-                {
-                    _chunkLength = END_OF_DATA;
-                }
-
-                return value;
-            }
-
-            case 0x34:
-            case 0x35:
-            case 0x36:
-            case 0x37:
-            {
-                _isLastChunk = true;
-                _chunkLength = (tag - 0x34) * 256 + read();
-
-                int value = parseByte();
-
-                // special code so successive read byte won't
-                // be read as a single object.
-                if (_chunkLength == 0)
-                {
-                    _chunkLength = END_OF_DATA;
-                }
-
-                return value;
-            }
-
-            default:
-                throw expect("binary", tag);
-        }
-    }
-
-    /**
-     * Reads a byte array from the stream.
-     */
-    public int readBytes(byte[] buffer, int offset, int length)
-            throws IOException
-    {
-        int readLength = 0;
-
-        if (_chunkLength == END_OF_DATA)
-        {
-            _chunkLength = 0;
-            return -1;
-        }
-        else if (_chunkLength == 0)
-        {
-            int tag = read();
-
-            switch (tag)
-            {
-                case 'N':
-                    return -1;
-
-                case 'B':
-                case BC_BINARY_CHUNK:
-                    _isLastChunk = tag == 'B';
-                    _chunkLength = (read() << 8) + read();
-                    break;
-
-                case 0x20:
-                case 0x21:
-                case 0x22:
-                case 0x23:
-                case 0x24:
-                case 0x25:
-                case 0x26:
-                case 0x27:
-                case 0x28:
-                case 0x29:
-                case 0x2a:
-                case 0x2b:
-                case 0x2c:
-                case 0x2d:
-                case 0x2e:
-                case 0x2f:
-                {
-                    _isLastChunk = true;
-                    _chunkLength = tag - 0x20;
-                    break;
-                }
-
-                case 0x34:
-                case 0x35:
-                case 0x36:
-                case 0x37:
-                {
-                    _isLastChunk = true;
-                    _chunkLength = (tag - 0x34) * 256 + read();
-                    break;
-                }
-
-                default:
-                    throw expect("binary", tag);
-            }
-        }
-
-        while (length > 0)
-        {
-            if (_chunkLength > 0)
-            {
-                buffer[offset++] = (byte) read();
-                _chunkLength--;
-                length--;
-                readLength++;
-            }
-            else if (_isLastChunk)
-            {
-                if (readLength == 0)
-                {
-                    return -1;
-                }
-                else
-                {
-                    _chunkLength = END_OF_DATA;
-                    return readLength;
-                }
-            }
-            else
-            {
-                int tag = read();
-
-                switch (tag)
-                {
-                    case 'B':
-                    case BC_BINARY_CHUNK:
-                        _isLastChunk = tag == 'B';
-                        _chunkLength = (read() << 8) + read();
-                        break;
-
-                    default:
-                        throw expect("binary", tag);
-                }
-            }
-        }
-
-        if (readLength == 0)
-        {
-            return -1;
-        }
-        else if (_chunkLength > 0 || !_isLastChunk)
-        {
-            return readLength;
-        }
-        else
-        {
-            _chunkLength = END_OF_DATA;
-            return readLength;
-        }
-    }
-
-    /**
-     * Reads a fault.
-     */
-    private HashMap readFault()
-            throws IOException
-    {
-        HashMap map = new HashMap();
-
-        int code = read();
-        for (; code > 0 && code != 'Z'; code = read())
-        {
-            _offset--;
-
-            Object key = readObject();
-            Object value = readObject();
-
-            if (key != null && value != null)
-            {
-                map.put(key, value);
-            }
-        }
-
-        if (code != 'Z')
-        {
-            throw expect("fault", code);
-        }
-
-        return map;
-    }
-
-    /**
      * Reads an object from the input stream with an expected type.
      */
     public Object readObject(Class cl)
@@ -2415,7 +1597,7 @@ public class Hessian2Input
 
             case 'C':
             {
-                readObjectDefinition(cl);
+                readObjectDefinition();
 
                 return readObject(cl);
             }
@@ -3027,7 +2209,7 @@ public class Hessian2Input
 
             case 'C':
             {
-                readObjectDefinition(null);
+                readObjectDefinition();
 
                 return readObject();
             }
@@ -3102,7 +2284,7 @@ public class Hessian2Input
      * O string <int> (string)* <value>*
      * </pre>
      */
-    private void readObjectDefinition(Class cl)
+    private void readObjectDefinition()
             throws IOException
     {
         String type = readString();
@@ -3149,15 +2331,6 @@ public class Hessian2Input
         {
             return reader.readObject(this, fields);
         }
-    }
-
-    /**
-     * Reads a reference.
-     */
-    public Object readRef()
-            throws IOException
-    {
-        return _refs.get(parseInt());
     }
 
     /**
@@ -3450,12 +2623,6 @@ public class Hessian2Input
         long bits = parseLong();
 
         return Double.longBitsToDouble(bits);
-    }
-
-    org.w3c.dom.Node parseXML()
-            throws IOException
-    {
-        throw new UnsupportedOperationException();
     }
 
     /**
@@ -3808,16 +2975,6 @@ public class Hessian2Input
         return _buffer[_offset++] & 0xff;
     }
 
-    protected void unread()
-    {
-        if (_offset <= 0)
-        {
-            throw new IllegalStateException();
-        }
-
-        _offset--;
-    }
-
     private final boolean readBuffer()
             throws IOException
     {
@@ -3849,11 +3006,6 @@ public class Hessian2Input
         _offset = 0;
 
         return true;
-    }
-
-    public Reader getReader()
-    {
-        return null;
     }
 
     protected IOException expect(String expect, int ch)
@@ -3952,14 +3104,7 @@ public class Hessian2Input
 
     protected IOException error(String message)
     {
-        if (_method != null)
-        {
-            return new HessianProtocolException(_method + ": " + message);
-        }
-        else
-        {
-            return new HessianProtocolException(message);
-        }
+        return new HessianProtocolException(message);
     }
 
     public void close()

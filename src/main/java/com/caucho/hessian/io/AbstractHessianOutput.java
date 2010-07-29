@@ -50,7 +50,6 @@ package com.caucho.hessian.io;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * Abstract output stream for Hessian requests.
@@ -68,9 +67,6 @@ import java.io.OutputStream;
 abstract public class AbstractHessianOutput
 {
     // serializer factory
-    private SerializerFactory _defaultSerializerFactory;
-
-    // serializer factory
     protected SerializerFactory _serializerFactory;
 
     private byte[] _byteBuffer;
@@ -86,21 +82,6 @@ abstract public class AbstractHessianOutput
     /**
      * Gets the serializer factory.
      */
-    public SerializerFactory getSerializerFactory()
-    {
-        // the default serializer factory cannot be modified by external
-        // callers
-        if (_serializerFactory == _defaultSerializerFactory)
-        {
-            _serializerFactory = new SerializerFactory();
-        }
-
-        return _serializerFactory;
-    }
-
-    /**
-     * Gets the serializer factory.
-     */
     protected final SerializerFactory findSerializerFactory()
     {
         SerializerFactory factory = _serializerFactory;
@@ -108,18 +89,10 @@ abstract public class AbstractHessianOutput
         if (factory == null)
         {
             factory = SerializerFactory.createDefault();
-            _defaultSerializerFactory = factory;
             _serializerFactory = factory;
         }
 
         return factory;
-    }
-
-    /**
-     * Initialize the output with a new underlying stream.
-     */
-    public void init(OutputStream os)
-    {
     }
 
     /**
@@ -144,36 +117,12 @@ abstract public class AbstractHessianOutput
      * Starts the method call:
      *
      * <code><pre>
-     * C
-     * </pre></code>
-     *
-     * @param method the method name to call.
-     */
-    abstract public void startCall()
-            throws IOException;
-
-    /**
-     * Starts the method call:
-     *
-     * <code><pre>
      * C string int
      * </pre></code>
      *
      * @param method the method name to call.
      */
     abstract public void startCall(String method, int length)
-            throws IOException;
-
-    /**
-     * Writes the method tag.
-     *
-     * <code><pre>
-     * string
-     * </pre></code>
-     *
-     * @param method the method name to call.
-     */
-    abstract public void writeMethod(String method)
             throws IOException;
 
     /**
@@ -299,25 +248,6 @@ abstract public class AbstractHessianOutput
      * @param value the string value to write.
      */
     abstract public void writeString(char[] buffer, int offset, int length)
-            throws IOException;
-
-    /**
-     * Writes a byte array to the stream.
-     * The array will be written with the following syntax:
-     *
-     * <code><pre>
-     * B b16 b18 bytes
-     * </pre></code>
-     *
-     * If the value is null, it will be written as
-     *
-     * <code><pre>
-     * N
-     * </pre></code>
-     *
-     * @param value the string value to write.
-     */
-    abstract public void writeBytes(byte[] buffer)
             throws IOException;
 
     /**
@@ -526,45 +456,10 @@ abstract public class AbstractHessianOutput
     {
     }
 
-    /**
-     * Writes the tail of the object to the stream.
-     */
-    public void writeObjectEnd()
-            throws IOException
-    {
-    }
-
-    public void writeReply(Object o)
-            throws IOException
-    {
-        startReply();
-        writeObject(o);
-        completeReply();
-    }
-
-
-    public void startReply()
-            throws IOException
-    {
-    }
-
-    public void completeReply()
-            throws IOException
-    {
-    }
-
-    public void writeFault(String code, String message, Object detail)
-            throws IOException
-    {
-    }
 
     public void flush()
             throws IOException
     {
     }
 
-    public void close()
-            throws IOException
-    {
-    }
 }

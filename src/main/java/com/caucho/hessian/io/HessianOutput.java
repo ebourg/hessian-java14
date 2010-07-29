@@ -166,43 +166,6 @@ public class HessianOutput extends AbstractHessianOutput
     }
 
     /**
-     * Writes the call tag.  This would be followed by the
-     * headers and the method tag.
-     *
-     * <code><pre>
-     * c major minor
-     * </pre></code>
-     *
-     * @param method the method name to call.
-     */
-    public void startCall()
-            throws IOException
-    {
-        os.write('c');
-        os.write(0);
-        os.write(1);
-    }
-
-    /**
-     * Writes the method tag.
-     *
-     * <code><pre>
-     * m b16 b8 method-name
-     * </pre></code>
-     *
-     * @param method the method name to call.
-     */
-    public void writeMethod(String method)
-            throws IOException
-    {
-        os.write('m');
-        int len = method.length();
-        os.write(len >> 8);
-        os.write(len);
-        printString(method, 0, len);
-    }
-
-    /**
      * Completes.
      *
      * <code><pre>
@@ -212,84 +175,6 @@ public class HessianOutput extends AbstractHessianOutput
     public void completeCall()
             throws IOException
     {
-        os.write('z');
-    }
-
-    /**
-     * Starts the reply
-     *
-     * <p>A successful completion will have a single value:
-     *
-     * <pre>
-     * r
-     * </pre>
-     */
-    public void startReply()
-            throws IOException
-    {
-        os.write('r');
-        os.write(1);
-        os.write(0);
-    }
-
-    /**
-     * Completes reading the reply
-     *
-     * <p>A successful completion will have a single value:
-     *
-     * <pre>
-     * z
-     * </pre>
-     */
-    public void completeReply()
-            throws IOException
-    {
-        os.write('z');
-    }
-
-    /**
-     * Writes a fault.  The fault will be written
-     * as a descriptive string followed by an object:
-     *
-     * <code><pre>
-     * f
-     * &lt;string>code
-     * &lt;string>the fault code
-     *
-     * &lt;string>message
-     * &lt;string>the fault mesage
-     *
-     * &lt;string>detail
-     * mt\x00\xnnjavax.ejb.FinderException
-     *     ...
-     * z
-     * z
-     * </pre></code>
-     *
-     * @param code the fault code, a three digit
-     */
-    public void writeFault(String code, String message, Object detail)
-            throws IOException
-    {
-        // hessian/3525
-        os.write('r');
-        os.write(1);
-        os.write(0);
-
-        os.write('f');
-        writeString("code");
-        writeString(code);
-
-        writeString("message");
-        writeString(message);
-
-        if (detail != null)
-        {
-            writeString("detail");
-            writeObject(detail);
-        }
-        os.write('z');
-
         os.write('z');
     }
 
@@ -643,35 +528,6 @@ public class HessianOutput extends AbstractHessianOutput
      *
      * @param value the string value to write.
      */
-    public void writeBytes(byte[] buffer)
-            throws IOException
-    {
-        if (buffer == null)
-        {
-            os.write('N');
-        }
-        else
-        {
-            writeBytes(buffer, 0, buffer.length);
-        }
-    }
-
-    /**
-     * Writes a byte array to the stream.
-     * The array will be written with the following syntax:
-     *
-     * <code><pre>
-     * B b16 b18 bytes
-     * </pre></code>
-     *
-     * If the value is null, it will be written as
-     *
-     * <code><pre>
-     * N
-     * </pre></code>
-     *
-     * @param value the string value to write.
-     */
     public void writeBytes(byte[] buffer, int offset, int length)
             throws IOException
     {
@@ -776,19 +632,6 @@ public class HessianOutput extends AbstractHessianOutput
     }
 
     /**
-     * Writes a placeholder.
-     *
-     * <code><pre>
-     * P
-     * </pre></code>
-     */
-    public void writePlaceholder()
-            throws IOException
-    {
-        os.write('P');
-    }
-
-    /**
      * If the object has already been written, just write its ref.
      *
      * @return true if we're writing a ref.
@@ -887,17 +730,6 @@ public class HessianOutput extends AbstractHessianOutput
      *
      * @param v the string to print.
      */
-    public void printString(String v)
-            throws IOException
-    {
-        printString(v, 0, v.length());
-    }
-
-    /**
-     * Prints a string to the stream, encoded as UTF-8
-     *
-     * @param v the string to print.
-     */
     public void printString(String v, int offset, int length)
             throws IOException
     {
@@ -962,12 +794,4 @@ public class HessianOutput extends AbstractHessianOutput
         }
     }
 
-    public void close()
-            throws IOException
-    {
-        if (this.os != null)
-        {
-            this.os.flush();
-        }
-    }
 }
