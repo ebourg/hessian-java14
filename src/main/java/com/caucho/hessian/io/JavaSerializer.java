@@ -49,7 +49,6 @@
 package com.caucho.hessian.io;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -73,7 +72,6 @@ public class JavaSerializer extends AbstractSerializer
     private Field[] _fields;
     private FieldSerializer[] _fieldSerializers;
 
-    private Object _writeReplaceFactory;
     private Method _writeReplace;
 
     public JavaSerializer(Class cl)
@@ -217,16 +215,7 @@ public class JavaSerializer extends AbstractSerializer
         {
             if (_writeReplace != null)
             {
-                Object repl;
-
-                if (_writeReplaceFactory != null)
-                {
-                    repl = _writeReplace.invoke(_writeReplaceFactory, new Object[]{obj});
-                }
-                else
-                {
-                    repl = _writeReplace.invoke(obj, null);
-                }
+                Object repl = _writeReplace.invoke(obj, null);
 
                 // out.removeRef(obj);
 

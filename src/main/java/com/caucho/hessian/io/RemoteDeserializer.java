@@ -56,16 +56,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
-import java.util.logging.*;
-
 /**
  * Serializing an object for known object types.
  */
 public class RemoteDeserializer extends JavaDeserializer
 {
-    private static final Logger log
-            = Logger.getLogger(RemoteDeserializer.class.getName());
-
     public static final Deserializer DESER = new RemoteDeserializer();
 
     public RemoteDeserializer()

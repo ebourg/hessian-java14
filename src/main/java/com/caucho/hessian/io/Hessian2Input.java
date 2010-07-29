@@ -90,8 +90,6 @@ public class Hessian2Input
     // factory for deserializing objects in the input stream
     protected SerializerFactory _serializerFactory;
 
-    private static boolean _isCloseStreamOnClose;
-
     protected ArrayList _refs
             = new ArrayList();
     protected ArrayList _classDefs
@@ -167,16 +165,6 @@ public class Hessian2Input
         }
 
         return factory;
-    }
-
-    public void setCloseStreamOnClose(boolean isClose)
-    {
-        _isCloseStreamOnClose = isClose;
-    }
-
-    public boolean isCloseStreamOnClose()
-    {
-        return _isCloseStreamOnClose;
     }
 
     /**
@@ -3301,47 +3289,6 @@ public class Hessian2Input
     }
 
     /**
-     * Resets the references for streaming.
-     */
-    public void resetReferences()
-    {
-        _refs.clear();
-    }
-
-    public void reset()
-    {
-        resetReferences();
-
-        _classDefs.clear();
-        _types.clear();
-    }
-
-    public void resetBuffer()
-    {
-        int offset = _offset;
-        _offset = 0;
-
-        int length = _length;
-        _length = 0;
-
-        if (length > 0 && offset != length)
-        {
-            throw new IllegalStateException("offset=" + offset + " length=" + length);
-        }
-    }
-
-    public Object readStreamingObject()
-            throws IOException
-    {
-        if (_refs != null)
-        {
-            _refs.clear();
-        }
-
-        return readObject();
-    }
-
-    /**
      * Resolves a remote object.
      */
     public Object resolveRemote(String type, String url)
@@ -4050,11 +3997,6 @@ public class Hessian2Input
     {
         InputStream is = _is;
         _is = null;
-
-        if (_isCloseStreamOnClose && is != null)
-        {
-            is.close();
-        }
     }
 
     class ReadInputStream extends InputStream
@@ -4103,8 +4045,6 @@ public class Hessian2Input
             }
         }
     }
-
-    ;
 
     final static class ObjectDefinition
     {

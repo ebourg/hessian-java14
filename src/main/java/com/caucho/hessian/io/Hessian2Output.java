@@ -87,8 +87,6 @@ public class Hessian2Output
     private final IdentityIntMap _refs
             = new IdentityIntMap(256);
 
-    private boolean _isCloseStreamOnClose;
-
     // map of classes
     private final IdentityIntMap _classRefs
             = new IdentityIntMap(256);
@@ -117,16 +115,6 @@ public class Hessian2Output
         reset();
 
         _os = os;
-    }
-
-    public void setCloseStreamOnClose(boolean isClose)
-    {
-        _isCloseStreamOnClose = isClose;
-    }
-
-    public boolean isCloseStreamOnClose()
-    {
-        return _isCloseStreamOnClose;
     }
 
     /**
@@ -1323,15 +1311,6 @@ public class Hessian2Output
     }
 
     /**
-     * Returns an output stream to write binary data.
-     */
-    public OutputStream getBytesOutputStream()
-            throws IOException
-    {
-        return new BytesOutputStream();
-    }
-
-    /**
      * Writes a full output stream.
      */
     public void writeByteStream(InputStream is)
@@ -1412,24 +1391,6 @@ public class Hessian2Output
     public int getRef(Object obj)
     {
         return _refs.get(obj);
-    }
-
-    /**
-     * Removes a reference.
-     */
-    public boolean removeRef(Object obj)
-            throws IOException
-    {
-        if (_refs != null)
-        {
-            _refs.remove(obj);
-
-            return true;
-        }
-        else
-        {
-            return false;
-        }
     }
 
     /**
@@ -1726,35 +1687,7 @@ public class Hessian2Output
         // hessian/3a8c
         flush();
 
-        OutputStream os = _os;
         _os = null;
-
-        if (os != null)
-        {
-            if (_isCloseStreamOnClose)
-            {
-                os.close();
-            }
-        }
-    }
-
-    public void free()
-    {
-        reset();
-
-        _os = null;
-        _isCloseStreamOnClose = false;
-    }
-
-    /**
-     * Resets the references for streaming.
-     */
-    public void resetReferences()
-    {
-        if (_refs != null)
-        {
-            _refs.clear();
-        }
     }
 
     /**
@@ -1773,97 +1706,4 @@ public class Hessian2Output
         _isPacket = false;
     }
 
-    class BytesOutputStream extends OutputStream
-    {
-        private int _startOffset;
-
-        BytesOutputStream()
-                throws IOException
-        {
-            if (SIZE < _offset + 16)
-            {
-                Hessian2Output.this.flushBuffer();
-            }
-
-            _startOffset = _offset;
-            _offset += 3; // skip 'b' xNN xNN
-        }
-
-        public void write(int ch)
-                throws IOException
-        {
-            if (SIZE <= _offset)
-            {
-                int length = (_offset - _startOffset) - 3;
-
-                _buffer[_startOffset] = (byte) BC_BINARY_CHUNK;
-                _buffer[_startOffset + 1] = (byte) (length >> 8);
-                _buffer[_startOffset + 2] = (byte) (length);
-
-                Hessian2Output.this.flushBuffer();
-
-                _startOffset = _offset;
-                _offset += 3;
-            }
-
-            _buffer[_offset++] = (byte) ch;
-        }
-
-        public void write(byte[] buffer, int offset, int length)
-                throws IOException
-        {
-            while (length > 0)
-            {
-                int sublen = SIZE - _offset;
-
-                if (length < sublen)
-                {
-                    sublen = length;
-                }
-
-                if (sublen > 0)
-                {
-                    System.arraycopy(buffer, offset, _buffer, _offset, sublen);
-                    _offset += sublen;
-                }
-
-                length -= sublen;
-                offset += sublen;
-
-                if (SIZE <= _offset)
-                {
-                    int chunkLength = (_offset - _startOffset) - 3;
-
-                    _buffer[_startOffset] = (byte) BC_BINARY_CHUNK;
-                    _buffer[_startOffset + 1] = (byte) (chunkLength >> 8);
-                    _buffer[_startOffset + 2] = (byte) (chunkLength);
-
-                    Hessian2Output.this.flushBuffer();
-
-                    _startOffset = _offset;
-                    _offset += 3;
-                }
-            }
-        }
-
-        public void close()
-                throws IOException
-        {
-            int startOffset = _startOffset;
-            _startOffset = -1;
-
-            if (startOffset < 0)
-            {
-                return;
-            }
-
-            int length = (_offset - startOffset) - 3;
-
-            _buffer[startOffset] = (byte) 'B';
-            _buffer[startOffset + 1] = (byte) (length >> 8);
-            _buffer[startOffset + 2] = (byte) (length);
-
-            Hessian2Output.this.flushBuffer();
-        }
-    }
 }

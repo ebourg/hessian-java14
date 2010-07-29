@@ -69,9 +69,6 @@ public class HessianURLConnection extends AbstractHessianConnection
     private int _statusCode;
     private String _statusMessage;
 
-    private InputStream _inputStream;
-    private InputStream _errorStream;
-
     HessianURLConnection(URL url, URLConnection conn)
     {
         _url = url;

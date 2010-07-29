@@ -165,17 +165,6 @@ abstract public class AbstractHessianOutput
             throws IOException;
 
     /**
-     * For Hessian 2.0, use the Header envelope instead
-     *
-     * @deprecated
-     */
-    public void writeHeader(String name)
-            throws IOException
-    {
-        throw new UnsupportedOperationException(getClass().getName());
-    }
-
-    /**
      * Writes the method tag.
      *
      * <code><pre>
@@ -434,15 +423,6 @@ abstract public class AbstractHessianOutput
             throws IOException;
 
     /**
-     * Removes a reference.
-     */
-    public boolean removeRef(Object obj)
-            throws IOException
-    {
-        return false;
-    }
-
-    /**
      * Replaces a reference from one object to another.
      */
     abstract public boolean replaceRef(Object oldRef, Object newRef)
@@ -468,13 +448,6 @@ abstract public class AbstractHessianOutput
      * @return
      */
     abstract public int getRef(Object obj);
-
-    /**
-     * Resets the references for streaming.
-     */
-    public void resetReferences()
-    {
-    }
 
     /**
      * Writes a generic object to the output stream.

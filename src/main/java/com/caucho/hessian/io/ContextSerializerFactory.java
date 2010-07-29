@@ -67,9 +67,6 @@ public class ContextSerializerFactory
     private static final Logger log
             = Logger.getLogger(ContextSerializerFactory.class.getName());
 
-    private static Deserializer OBJECT_DESERIALIZER
-            = new BasicDeserializer(BasicDeserializer.OBJECT);
-
     private static final WeakHashMap
             _contextRefMap
             = new WeakHashMap();
@@ -80,7 +77,6 @@ public class ContextSerializerFactory
     private static HashMap _staticDeserializerMap;
     private static HashMap _staticClassNameMap;
 
-    private ContextSerializerFactory _parent;
     private ClassLoader _loader;
 
     private final HashSet _serializerFiles = new HashSet();
@@ -107,8 +103,7 @@ public class ContextSerializerFactory
     private final HashMap _deserializerInterfaceMap
             = new HashMap();
 
-    public ContextSerializerFactory(ContextSerializerFactory parent,
-                                    ClassLoader loader)
+    public ContextSerializerFactory(ClassLoader loader)
     {
         if (loader == null)
         {
@@ -118,11 +113,6 @@ public class ContextSerializerFactory
         _loader = loader;
 
         init();
-    }
-
-    public static ContextSerializerFactory create()
-    {
-        return create(Thread.currentThread().getContextClassLoader());
     }
 
     public static ContextSerializerFactory create(ClassLoader loader)
@@ -141,14 +131,7 @@ public class ContextSerializerFactory
 
             if (factory == null)
             {
-                ContextSerializerFactory parent = null;
-
-                if (loader != null)
-                {
-                    parent = create(loader.getParent());
-                }
-
-                factory = new ContextSerializerFactory(parent, loader);
+                factory = new ContextSerializerFactory(loader);
                 factoryRef = new SoftReference(factory);
 
                 _contextRefMap.put(loader, factoryRef);
@@ -310,21 +293,9 @@ public class ContextSerializerFactory
      */
     private void init()
     {
-        if (_parent != null)
-        {
-            _serializerFiles.addAll(_parent._serializerFiles);
-            _deserializerFiles.addAll(_parent._deserializerFiles);
-
-            _serializerClassMap.putAll(_parent._serializerClassMap);
-            _deserializerClassMap.putAll(_parent._deserializerClassMap);
-        }
-
-        if (_parent == null)
-        {
-            _serializerClassMap.putAll(_staticSerializerMap);
-            _deserializerClassMap.putAll(_staticDeserializerMap);
-            _deserializerClassNameMap.putAll(_staticClassNameMap);
-        }
+        _serializerClassMap.putAll(_staticSerializerMap);
+        _deserializerClassMap.putAll(_staticDeserializerMap);
+        _deserializerClassNameMap.putAll(_staticClassNameMap);
 
         HashMap classMap;
 

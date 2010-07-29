@@ -248,25 +248,6 @@ public class HessianOutput extends AbstractHessianOutput
     }
 
     /**
-     * Writes a header name.  The header value must immediately follow.
-     *
-     * <code><pre>
-     * H b16 b8 foo <em>value</em>
-     * </pre></code>
-     */
-    public void writeHeader(String name)
-            throws IOException
-    {
-        int len = name.length();
-
-        os.write('H');
-        os.write(len >> 8);
-        os.write(len);
-
-        printString(name);
-    }
-
-    /**
      * Writes a fault.  The fault will be written
      * as a descriptive string followed by an object:
      *
@@ -873,35 +854,6 @@ public class HessianOutput extends AbstractHessianOutput
         else
         {
             return value.intValue();
-        }
-    }
-
-    /**
-     * Resets the references for streaming.
-     */
-    public void resetReferences()
-    {
-        if (_refs != null)
-        {
-            _refs.clear();
-        }
-    }
-
-    /**
-     * Removes a reference.
-     */
-    public boolean removeRef(Object obj)
-            throws IOException
-    {
-        if (_refs != null)
-        {
-            _refs.remove(obj);
-
-            return true;
-        }
-        else
-        {
-            return false;
         }
     }
 

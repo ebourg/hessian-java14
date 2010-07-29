@@ -62,8 +62,6 @@ import java.net.URL;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;
 import java.util.Hashtable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Factory for creating Hessian client stubs.  The returned stub will
@@ -103,9 +101,6 @@ import java.util.logging.Logger;
  */
 public class HessianProxyFactory implements ServiceProxyFactory
 {
-    protected static Logger log
-            = Logger.getLogger(HessianProxyFactory.class.getName());
-
     private final ClassLoader _loader;
 
     private SerializerFactory _serializerFactory;

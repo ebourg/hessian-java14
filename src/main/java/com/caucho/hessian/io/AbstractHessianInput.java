@@ -434,13 +434,6 @@ abstract public class AbstractHessianInput
             throws IOException;
 
     /**
-     * Resets the references for streaming.
-     */
-    public void resetReferences()
-    {
-    }
-
-    /**
      * Reads the start of a list
      */
     abstract public int readListStart()

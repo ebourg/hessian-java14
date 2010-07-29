@@ -63,9 +63,6 @@ public class SerializerFactory extends AbstractSerializerFactory
     private static final Logger log
             = Logger.getLogger(SerializerFactory.class.getName());
 
-    private static final Deserializer OBJECT_DESERIALIZER
-            = new BasicDeserializer(BasicDeserializer.OBJECT);
-
     private static final ClassLoader _systemClassLoader;
 
     private static final HashMap _staticTypeMap;
@@ -77,8 +74,6 @@ public class SerializerFactory extends AbstractSerializerFactory
 
     private ContextSerializerFactory _contextFactory;
     private ClassLoader _loader;
-
-    protected Serializer _defaultSerializer;
 
     // Additional factories
     protected ArrayList _factories = new ArrayList();
@@ -364,11 +359,6 @@ public class SerializerFactory extends AbstractSerializerFactory
      */
     protected Serializer getDefaultSerializer(Class cl)
     {
-        if (_defaultSerializer != null)
-        {
-            return _defaultSerializer;
-        }
-
         if (!Serializable.class.isAssignableFrom(cl)
                 && !_isAllowNonSerializable)
         {

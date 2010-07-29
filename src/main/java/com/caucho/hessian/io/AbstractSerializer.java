@@ -49,7 +49,6 @@
 package com.caucho.hessian.io;
 
 import java.io.IOException;
-import java.util.logging.*;
 
 import com.caucho.hessian.HessianException;
 
@@ -59,9 +58,6 @@ import com.caucho.hessian.HessianException;
 abstract public class AbstractSerializer implements Serializer
 {
     public static final NullSerializer NULL = new NullSerializer();
-
-    protected static final Logger log
-            = Logger.getLogger(AbstractSerializer.class.getName());
 
     public void writeObject(Object obj, AbstractHessianOutput out)
             throws IOException

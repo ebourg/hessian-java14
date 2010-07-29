@@ -92,9 +92,6 @@ public class HessianInput extends AbstractHessianInput
     // the method for a call
     private String _method;
 
-    private Reader _chunkReader;
-    private InputStream _chunkInputStream;
-
     private Throwable _replyFault;
 
     private StringBuffer _sbuf = new StringBuffer();
@@ -1439,17 +1436,6 @@ public class HessianInput extends AbstractHessianInput
     public void setRef(int i, Object ref)
     {
         _refs.set(i, ref);
-    }
-
-    /**
-     * Resets the references for streaming.
-     */
-    public void resetReferences()
-    {
-        if (_refs != null)
-        {
-            _refs.clear();
-        }
     }
 
     /**
