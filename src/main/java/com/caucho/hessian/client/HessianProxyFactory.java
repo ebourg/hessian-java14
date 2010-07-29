@@ -344,7 +344,7 @@ public class HessianProxyFactory
         }
         */
 
-        return new HessianURLConnection(url, conn);
+        return new HessianConnection(url, conn);
     }
 
     /**
