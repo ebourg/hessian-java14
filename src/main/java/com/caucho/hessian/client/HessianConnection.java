@@ -56,6 +56,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
+import com.caucho.hessian.HessianException;
+
 /**
  * Internal connection to a server.  The default connection is based on
  * java.net
@@ -146,17 +148,17 @@ public class HessianConnection
                 }
                 catch (FileNotFoundException e)
                 {
-                    throw new HessianConnectionException("HessianProxy cannot connect to '" + _url, e);
+                    throw new HessianException("HessianProxy cannot connect to '" + _url, e);
                 }
                 catch (IOException e)
                 {
                     if (is == null)
                     {
-                        throw new HessianConnectionException(_statusCode + ": " + e, e);
+                        throw new HessianException(_statusCode + ": " + e, e);
                     }
                     else
                     {
-                        throw new HessianConnectionException(_statusCode + ": " + sb, e);
+                        throw new HessianException(_statusCode + ": " + sb, e);
                     }
                 }
 
@@ -165,7 +167,7 @@ public class HessianConnection
                     is.close();
                 }
 
-                throw new HessianConnectionException(_statusCode + ": " + sb.toString());
+                throw new HessianException(_statusCode + ": " + sb.toString());
             }
         }
     }
