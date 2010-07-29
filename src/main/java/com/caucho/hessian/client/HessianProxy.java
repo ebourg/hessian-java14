@@ -292,7 +292,7 @@ public class HessianProxy implements InvocationHandler, Serializable
     {
         HessianConnection conn;
 
-        conn = _factory.getConnectionFactory().open(_url);
+        conn = _factory.openConnection(_url);
         boolean isValid = false;
 
         try

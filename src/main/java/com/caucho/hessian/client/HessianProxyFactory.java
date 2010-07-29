@@ -52,10 +52,13 @@ import com.caucho.hessian.io.*;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * Factory for creating Hessian client stubs.  The returned stub will
@@ -98,8 +101,6 @@ public class HessianProxyFactory
     private final ClassLoader _loader;
 
     private SerializerFactory _serializerFactory;
-
-    private HessianConnectionFactory _connFactory;
 
     private HessianRemoteResolver _resolver;
 
@@ -168,29 +169,6 @@ public class HessianProxyFactory
         {
             return null;
         }
-    }
-
-    /**
-     * Sets the connection factory to use when connecting
-     * to the Hessian service.
-     */
-    public void setConnectionFactory(HessianConnectionFactory factory)
-    {
-        _connFactory = factory;
-    }
-
-    /**
-     * Returns the connection factory to be used for the HTTP request.
-     */
-    public HessianConnectionFactory getConnectionFactory()
-    {
-        if (_connFactory == null)
-        {
-            _connFactory = createHessianConnectionFactory();
-            _connFactory.setHessianProxyFactory(this);
-        }
-
-        return _connFactory;
     }
 
     /**
@@ -307,32 +285,66 @@ public class HessianProxyFactory
         return _serializerFactory;
     }
 
-    protected HessianConnectionFactory createHessianConnectionFactory()
+    /**
+     * Opens a new or recycled connection to the HTTP server.
+     */
+    public HessianConnection openConnection(URL url) throws IOException
     {
-        String className
-                = System.getProperty(HessianConnectionFactory.class.getName());
+        URLConnection conn = url.openConnection();
 
-        HessianConnectionFactory factory;
+        // HttpURLConnection httpConn = (HttpURLConnection) conn;
+        // httpConn.setRequestMethod("POST");
+        // conn.setDoInput(true);
 
-        try
+        if (_connectTimeout > 0)
         {
-            if (className != null)
+            try
             {
-                ClassLoader loader = Thread.currentThread().getContextClassLoader();
+                // only available for JDK 1.5
+                Method method = conn.getClass().getMethod("setConnectTimeout", new Class[]{int.class});
 
-                Class cl = Class.forName(className, false, loader);
-
-                factory = (HessianConnectionFactory) cl.newInstance();
-
-                return factory;
+                if (method != null)
+                {
+                    method.invoke(conn, new Object[]{new Integer((int) _connectTimeout)});
+                }
+            }
+            catch (Throwable e)
+            {
             }
         }
-        catch (Exception e)
+
+        conn.setDoOutput(true);
+
+        if (_readTimeout > 0)
         {
-            throw new RuntimeException(e);
+            try
+            {
+                // only available for JDK 1.5
+                Method method = conn.getClass().getMethod("setReadTimeout", new Class[]{int.class});
+
+                if (method != null)
+                {
+                    method.invoke(conn, new Object[]{new Integer((int) _readTimeout)});
+                }
+            }
+            catch (Throwable e)
+            {
+            }
         }
 
-        return new HessianURLConnectionFactory();
+        /*
+        // Used chunked mode when available, i.e. JDK 1.5.
+        if (_proxyFactory.isChunkedPost() && conn instanceof HttpURLConnection) {
+          try {
+        HttpURLConnection httpConn = (HttpURLConnection) conn;
+    
+        httpConn.setChunkedStreamingMode(8 * 1024);
+          } catch (Throwable e) {
+          }
+        }
+        */
+
+        return new HessianURLConnection(url, conn);
     }
 
     /**
