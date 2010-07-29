@@ -58,8 +58,6 @@ import java.util.HashMap;
 
 import java.util.logging.*;
 
-import com.caucho.hessian.io.UnsafeDeserializer.FieldDeserializer;
-
 /**
  * Serializing an object for known object types.
  */

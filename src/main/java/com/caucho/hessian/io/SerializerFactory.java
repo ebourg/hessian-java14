@@ -93,9 +93,6 @@ public class SerializerFactory extends AbstractSerializerFactory
     private HashMap _cachedTypeDeserializerMap;
 
     private boolean _isAllowNonSerializable;
-    private boolean _isEnableUnsafeSerializer
-            = (UnsafeSerializer.isEnabled()
-            && UnsafeDeserializer.isEnabled());
 
     public SerializerFactory()
     {
@@ -378,15 +375,7 @@ public class SerializerFactory extends AbstractSerializerFactory
             throw new IllegalStateException("Serialized class " + cl.getName() + " must implement java.io.Serializable");
         }
 
-        if (_isEnableUnsafeSerializer
-                && JavaSerializer.getWriteReplace(cl) == null)
-        {
-            return UnsafeSerializer.create(cl);
-        }
-        else
-        {
-            return JavaSerializer.create(cl);
-        }
+        return JavaSerializer.create(cl);
     }
 
     /**
@@ -563,14 +552,7 @@ public class SerializerFactory extends AbstractSerializerFactory
             return InputStreamDeserializer.DESER;
         }
 
-        if (_isEnableUnsafeSerializer)
-        {
-            return new UnsafeDeserializer(cl);
-        }
-        else
-        {
-            return new JavaDeserializer(cl);
-        }
+        return new JavaDeserializer(cl);
     }
 
     /**
