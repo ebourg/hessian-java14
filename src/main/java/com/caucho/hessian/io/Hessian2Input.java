@@ -3995,7 +3995,6 @@ public class Hessian2Input
     public void close()
             throws IOException
     {
-        InputStream is = _is;
         _is = null;
     }
 

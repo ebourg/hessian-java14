@@ -73,9 +73,7 @@ public class RemoteDeserializer extends JavaDeserializer
 
         if (resolver != null)
         {
-            Object proxy = resolver.lookup(remote.getType(), remote.getURL());
-
-            return proxy;
+            return resolver.lookup(remote.getType(), remote.getURL());
         }
         else
         {

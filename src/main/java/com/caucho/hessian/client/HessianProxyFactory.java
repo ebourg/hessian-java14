@@ -313,7 +313,7 @@ public class HessianProxyFactory implements ServiceProxyFactory
         String className
                 = System.getProperty(HessianConnectionFactory.class.getName());
 
-        HessianConnectionFactory factory = null;
+        HessianConnectionFactory factory;
 
         try
         {
@@ -391,8 +391,8 @@ public class HessianProxyFactory implements ServiceProxyFactory
      * HelloHome hello = (HelloHome) factory.create(HelloHome.class, url);
      * </pre>
      *
-     * @param api the interface the proxy class needs to implement
-     * @param url the URL where the client object is located.
+     * @param api     the interface the proxy class needs to implement
+     * @param urlName the URL where the client object is located.
      * @return a proxy to the object with the specified interface.
      */
     public Object create(Class api, String urlName, ClassLoader loader)
@@ -422,7 +422,7 @@ public class HessianProxyFactory implements ServiceProxyFactory
         {
             throw new NullPointerException("api must not be null for HessianProxyFactory.create()");
         }
-        InvocationHandler handler = null;
+        InvocationHandler handler;
 
         handler = new HessianProxy(url, this, api);
 

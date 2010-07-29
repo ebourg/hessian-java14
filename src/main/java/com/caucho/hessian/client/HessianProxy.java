@@ -290,7 +290,7 @@ public class HessianProxy implements InvocationHandler, Serializable
     protected HessianConnection sendRequest(String methodName, Object[] args)
             throws IOException
     {
-        HessianConnection conn = null;
+        HessianConnection conn;
 
         conn = _factory.getConnectionFactory().open(_url);
         boolean isValid = false;
@@ -299,7 +299,7 @@ public class HessianProxy implements InvocationHandler, Serializable
         {
             addRequestHeaders(conn);
 
-            OutputStream os = null;
+            OutputStream os;
 
             try
             {

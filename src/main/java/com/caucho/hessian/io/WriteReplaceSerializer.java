@@ -62,8 +62,6 @@ public class WriteReplaceSerializer extends AbstractSerializer
     private static final Logger log
             = Logger.getLogger(WriteReplaceSerializer.class.getName());
 
-    private static Object[] NULL_ARGS = new Object[0];
-
     private Object _writeReplaceFactory;
     private Method _writeReplace;
     private Serializer _baseSerializer;

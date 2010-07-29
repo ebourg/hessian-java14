@@ -241,7 +241,7 @@ public class SerializerFactory extends AbstractSerializerFactory
     protected Serializer loadSerializer(Class cl)
             throws HessianProtocolException
     {
-        Serializer serializer = null;
+        Serializer serializer;
 
         for (int i = 0;
              _factories != null && i < _factories.size();
@@ -273,7 +273,7 @@ public class SerializerFactory extends AbstractSerializerFactory
             loader = _systemClassLoader;
         }
 
-        ContextSerializerFactory factory = null;
+        ContextSerializerFactory factory;
 
         factory = ContextSerializerFactory.create(loader);
 
@@ -434,7 +434,7 @@ public class SerializerFactory extends AbstractSerializerFactory
             return deserializer;
         }
 
-        ContextSerializerFactory factory = null;
+        ContextSerializerFactory factory;
 
         if (cl.getClassLoader() != null)
         {
@@ -508,9 +508,7 @@ public class SerializerFactory extends AbstractSerializerFactory
             Class serClass = Class.forName(cl.getName() + "HessianDeserializer",
                     false, cl.getClassLoader());
 
-            Deserializer ser = (Deserializer) serClass.newInstance();
-
-            return ser;
+            return (Deserializer) serClass.newInstance();
         }
         catch (ClassNotFoundException e)
         {
@@ -548,7 +546,7 @@ public class SerializerFactory extends AbstractSerializerFactory
      * Reads the object as a list.
      */
     public Object readList(AbstractHessianInput in, int length, String type)
-            throws HessianProtocolException, IOException
+            throws IOException
     {
         Deserializer deserializer = getDeserializer(type);
 
@@ -566,7 +564,7 @@ public class SerializerFactory extends AbstractSerializerFactory
      * Reads the object as a map.
      */
     public Object readMap(AbstractHessianInput in, String type)
-            throws HessianProtocolException, IOException
+            throws IOException
     {
         Deserializer deserializer = getDeserializer(type);
 
@@ -592,7 +590,7 @@ public class SerializerFactory extends AbstractSerializerFactory
     public Object readObject(AbstractHessianInput in,
                              String type,
                              String[] fieldNames)
-            throws HessianProtocolException, IOException
+            throws IOException
     {
         Deserializer deserializer = getDeserializer(type);
 
@@ -787,7 +785,7 @@ public class SerializerFactory extends AbstractSerializerFactory
         return deserializer;
     }
 
-    private static void addBasic(Class cl, String typeName, int type)
+    private static void addBasic(String typeName, int type)
     {
         Deserializer deserializer = new BasicDeserializer(type);
         _staticTypeMap.put(typeName, deserializer);
@@ -797,39 +795,39 @@ public class SerializerFactory extends AbstractSerializerFactory
     {
         _staticTypeMap = new HashMap();
 
-        addBasic(void.class, "void", BasicSerializer.NULL);
+        addBasic("void", BasicSerializer.NULL);
 
-        addBasic(Boolean.class, "boolean", BasicSerializer.BOOLEAN);
-        addBasic(Byte.class, "byte", BasicSerializer.BYTE);
-        addBasic(Short.class, "short", BasicSerializer.SHORT);
-        addBasic(Integer.class, "int", BasicSerializer.INTEGER);
-        addBasic(Long.class, "long", BasicSerializer.LONG);
-        addBasic(Float.class, "float", BasicSerializer.FLOAT);
-        addBasic(Double.class, "double", BasicSerializer.DOUBLE);
-        addBasic(Character.class, "char", BasicSerializer.CHARACTER_OBJECT);
-        addBasic(String.class, "string", BasicSerializer.STRING);
-        addBasic(Object.class, "object", BasicSerializer.OBJECT);
-        addBasic(java.util.Date.class, "date", BasicSerializer.DATE);
+        addBasic("boolean", BasicSerializer.BOOLEAN);
+        addBasic("byte", BasicSerializer.BYTE);
+        addBasic("short", BasicSerializer.SHORT);
+        addBasic("int", BasicSerializer.INTEGER);
+        addBasic("long", BasicSerializer.LONG);
+        addBasic("float", BasicSerializer.FLOAT);
+        addBasic("double", BasicSerializer.DOUBLE);
+        addBasic("char", BasicSerializer.CHARACTER_OBJECT);
+        addBasic("string", BasicSerializer.STRING);
+        addBasic("object", BasicSerializer.OBJECT);
+        addBasic("date", BasicSerializer.DATE);
 
-        addBasic(boolean.class, "boolean", BasicSerializer.BOOLEAN);
-        addBasic(byte.class, "byte", BasicSerializer.BYTE);
-        addBasic(short.class, "short", BasicSerializer.SHORT);
-        addBasic(int.class, "int", BasicSerializer.INTEGER);
-        addBasic(long.class, "long", BasicSerializer.LONG);
-        addBasic(float.class, "float", BasicSerializer.FLOAT);
-        addBasic(double.class, "double", BasicSerializer.DOUBLE);
-        addBasic(char.class, "char", BasicSerializer.CHARACTER);
+        addBasic("boolean", BasicSerializer.BOOLEAN);
+        addBasic("byte", BasicSerializer.BYTE);
+        addBasic("short", BasicSerializer.SHORT);
+        addBasic("int", BasicSerializer.INTEGER);
+        addBasic("long", BasicSerializer.LONG);
+        addBasic("float", BasicSerializer.FLOAT);
+        addBasic("double", BasicSerializer.DOUBLE);
+        addBasic("char", BasicSerializer.CHARACTER);
 
-        addBasic(boolean[].class, "[boolean", BasicSerializer.BOOLEAN_ARRAY);
-        addBasic(byte[].class, "[byte", BasicSerializer.BYTE_ARRAY);
-        addBasic(short[].class, "[short", BasicSerializer.SHORT_ARRAY);
-        addBasic(int[].class, "[int", BasicSerializer.INTEGER_ARRAY);
-        addBasic(long[].class, "[long", BasicSerializer.LONG_ARRAY);
-        addBasic(float[].class, "[float", BasicSerializer.FLOAT_ARRAY);
-        addBasic(double[].class, "[double", BasicSerializer.DOUBLE_ARRAY);
-        addBasic(char[].class, "[char", BasicSerializer.CHARACTER_ARRAY);
-        addBasic(String[].class, "[string", BasicSerializer.STRING_ARRAY);
-        addBasic(Object[].class, "[object", BasicSerializer.OBJECT_ARRAY);
+        addBasic("[boolean", BasicSerializer.BOOLEAN_ARRAY);
+        addBasic("[byte", BasicSerializer.BYTE_ARRAY);
+        addBasic("[short", BasicSerializer.SHORT_ARRAY);
+        addBasic("[int", BasicSerializer.INTEGER_ARRAY);
+        addBasic("[long", BasicSerializer.LONG_ARRAY);
+        addBasic("[float", BasicSerializer.FLOAT_ARRAY);
+        addBasic("[double", BasicSerializer.DOUBLE_ARRAY);
+        addBasic("[char", BasicSerializer.CHARACTER_ARRAY);
+        addBasic("[string", BasicSerializer.STRING_ARRAY);
+        addBasic("[object", BasicSerializer.OBJECT_ARRAY);
 
         Deserializer objectDeserializer = new JavaDeserializer(Object.class);
         _staticTypeMap.put("object", objectDeserializer);
