@@ -284,11 +284,6 @@ public class SerializerFactory extends AbstractSerializerFactory
             return serializer;
         }
 
-        if (HessianRemoteObject.class.isAssignableFrom(cl))
-        {
-            return new RemoteSerializer();
-        }
-
         else if (JavaSerializer.getWriteReplace(cl) != null)
         {
             Serializer baseSerializer = getDefaultSerializer(cl);
@@ -831,9 +826,6 @@ public class SerializerFactory extends AbstractSerializerFactory
 
         Deserializer objectDeserializer = new JavaDeserializer(Object.class);
         _staticTypeMap.put("object", objectDeserializer);
-        _staticTypeMap.put(HessianRemote.class.getName(),
-                RemoteDeserializer.DESER);
-
 
         ClassLoader systemClassLoader = null;
         try

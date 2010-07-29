@@ -102,8 +102,6 @@ public class HessianProxyFactory
 
     private SerializerFactory _serializerFactory;
 
-    private HessianRemoteResolver _resolver;
-
     private String _user;
     private String _password;
     private String _basicAuth;
@@ -132,7 +130,6 @@ public class HessianProxyFactory
     public HessianProxyFactory(ClassLoader loader)
     {
         _loader = loader;
-        _resolver = new HessianProxyResolver(this);
     }
 
     /**
@@ -254,14 +251,6 @@ public class HessianProxyFactory
         {
             _isHessian2Reply = true;
         }
-    }
-
-    /**
-     * Returns the remote resolver.
-     */
-    public HessianRemoteResolver getRemoteResolver()
-    {
-        return _resolver;
     }
 
     /**
@@ -406,14 +395,10 @@ public class HessianProxyFactory
         {
             throw new NullPointerException("api must not be null for HessianProxyFactory.create()");
         }
-        InvocationHandler handler;
+        
+        InvocationHandler handler = new HessianProxy(url, this);
 
-        handler = new HessianProxy(url, this, api);
-
-        return Proxy.newProxyInstance(loader,
-                new Class[]{api,
-                        HessianRemoteObject.class},
-                handler);
+        return Proxy.newProxyInstance(loader, new Class[]{api}, handler);
     }
 
     public AbstractHessianInput getHessianInput(InputStream is)
@@ -425,8 +410,6 @@ public class HessianProxyFactory
     {
         AbstractHessianInput in = new HessianInput(is);
 
-        in.setRemoteResolver(getRemoteResolver());
-
         in.setSerializerFactory(getSerializerFactory());
 
         return in;
@@ -435,8 +418,6 @@ public class HessianProxyFactory
     public AbstractHessianInput getHessian2Input(InputStream is)
     {
         AbstractHessianInput in = new Hessian2Input(is);
-
-        in.setRemoteResolver(getRemoteResolver());
 
         in.setSerializerFactory(getSerializerFactory());
 

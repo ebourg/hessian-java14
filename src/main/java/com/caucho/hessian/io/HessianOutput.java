@@ -382,24 +382,6 @@ public class HessianOutput extends AbstractHessianOutput
     }
 
     /**
-     * Writes a remote object reference to the stream.  The type is the
-     * type of the remote interface.
-     *
-     * <code><pre>
-     * 'r' 't' b16 b8 type url
-     * </pre></code>
-     */
-    public void writeRemote(String type, String url)
-            throws IOException
-    {
-        os.write('r');
-        os.write('t');
-        printLenString(type);
-        os.write('S');
-        printLenString(url);
-    }
-
-    /**
      * Writes a boolean value to the stream.  The boolean will be written
      * with the following syntax:
      *

@@ -71,10 +71,8 @@ public class HessianProxy implements InvocationHandler, Serializable
 
     protected HessianProxyFactory _factory;
 
-    private WeakHashMap _mangleMap
-            = new WeakHashMap();
+    private WeakHashMap _mangleMap = new WeakHashMap();
 
-    private Class _type;
     private URL _url;
 
     /**
@@ -82,19 +80,8 @@ public class HessianProxy implements InvocationHandler, Serializable
      */
     protected HessianProxy(URL url, HessianProxyFactory factory)
     {
-        this(url, factory, null);
-    }
-
-    /**
-     * Protected constructor for subclassing
-     */
-    protected HessianProxy(URL url,
-                           HessianProxyFactory factory,
-                           Class type)
-    {
         _factory = factory;
         _url = url;
-        _type = type;
     }
 
     /**
@@ -151,14 +138,6 @@ public class HessianProxy implements InvocationHandler, Serializable
             else if (methodName.equals("hashCode") && params.length == 0)
             {
                 return new Integer(_url.hashCode());
-            }
-            else if (methodName.equals("getHessianType"))
-            {
-                return proxy.getClass().getInterfaces()[0].getName();
-            }
-            else if (methodName.equals("getHessianURL"))
-            {
-                return _url.toString();
             }
             else if (methodName.equals("toString") && params.length == 0)
             {
@@ -339,11 +318,6 @@ public class HessianProxy implements InvocationHandler, Serializable
      */
     protected void parseResponseHeaders(URLConnection conn)
     {
-    }
-
-    public Object writeReplace()
-    {
-        return new HessianRemote(_type.getName(), _url.toString());
     }
 
     static class ResultInputStream extends InputStream

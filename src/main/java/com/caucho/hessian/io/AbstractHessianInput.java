@@ -68,7 +68,6 @@ import java.io.Reader;
  */
 abstract public class AbstractHessianInput
 {
-    private HessianRemoteResolver resolver;
     private byte[] _buffer;
 
     /**
@@ -82,22 +81,6 @@ abstract public class AbstractHessianInput
      * Returns the call's method
      */
     abstract public String getMethod();
-
-    /**
-     * Sets the resolver used to lookup remote objects.
-     */
-    public void setRemoteResolver(HessianRemoteResolver resolver)
-    {
-        this.resolver = resolver;
-    }
-
-    /**
-     * Sets the resolver used to lookup remote objects.
-     */
-    public HessianRemoteResolver getRemoteResolver()
-    {
-        return resolver;
-    }
 
     /**
      * Sets the serializer factory.
@@ -398,17 +381,6 @@ abstract public class AbstractHessianInput
      * Reads an arbitrary object from the input stream.
      */
     abstract public Object readObject()
-            throws IOException;
-
-    /**
-     * Reads a remote object reference to the stream.  The type is the
-     * type of the remote interface.
-     *
-     * <code><pre>
-     * 'r' 't' b16 b8 type url
-     * </pre></code>
-     */
-    abstract public Object readRemote()
             throws IOException;
 
     /**

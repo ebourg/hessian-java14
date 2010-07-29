@@ -1194,10 +1194,11 @@ public class HessianInput extends AbstractHessianInput
 
             case 'r':
             {
+                // remote object (disabled feature)
                 String type = readType();
                 String url = readString();
 
-                return resolveRemote(type, url);
+                return null;
             }
         }
 
@@ -1310,27 +1311,16 @@ public class HessianInput extends AbstractHessianInput
 
             case 'r':
             {
+                // remote object (disabled feature)
                 String type = readType();
                 String url = readString();
 
-                return resolveRemote(type, url);
+                return null;
             }
 
             default:
                 throw error("unknown code for readObject at " + codeName(tag));
         }
-    }
-
-    /**
-     * Reads a remote object.
-     */
-    public Object readRemote()
-            throws IOException
-    {
-        String type = readType();
-        String url = readString();
-
-        return resolveRemote(type, url);
     }
 
     /**
@@ -1436,24 +1426,6 @@ public class HessianInput extends AbstractHessianInput
     public void setRef(int i, Object ref)
     {
         _refs.set(i, ref);
-    }
-
-    /**
-     * Resolves a remote object.
-     */
-    public Object resolveRemote(String type, String url)
-            throws IOException
-    {
-        HessianRemoteResolver resolver = getRemoteResolver();
-
-        if (resolver != null)
-        {
-            return resolver.lookup(type, url);
-        }
-        else
-        {
-            return new HessianRemote(type, url);
-        }
     }
 
     /**

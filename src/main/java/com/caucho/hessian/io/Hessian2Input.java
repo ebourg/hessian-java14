@@ -3152,18 +3152,6 @@ public class Hessian2Input
     }
 
     /**
-     * Reads a remote object.
-     */
-    public Object readRemote()
-            throws IOException
-    {
-        String type = readType();
-        String url = readString();
-
-        return resolveRemote(type, url);
-    }
-
-    /**
      * Reads a reference.
      */
     public Object readRef()
@@ -3286,24 +3274,6 @@ public class Hessian2Input
     public void setRef(int i, Object ref)
     {
         _refs.set(i, ref);
-    }
-
-    /**
-     * Resolves a remote object.
-     */
-    public Object resolveRemote(String type, String url)
-            throws IOException
-    {
-        HessianRemoteResolver resolver = getRemoteResolver();
-
-        if (resolver != null)
-        {
-            return resolver.lookup(type, url);
-        }
-        else
-        {
-            return new HessianRemote(type, url);
-        }
     }
 
     /**
