@@ -58,7 +58,7 @@ import java.lang.reflect.Proxy;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
+import java.net.HttpURLConnection;
 
 /**
  * Factory for creating Hessian client stubs.  The returned stub will
@@ -261,7 +261,7 @@ public class HessianProxyFactory
      */
     public HessianConnection openConnection(URL url) throws IOException
     {
-        URLConnection conn = url.openConnection();
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
         // HttpURLConnection httpConn = (HttpURLConnection) conn;
         // httpConn.setRequestMethod("POST");
@@ -303,7 +303,7 @@ public class HessianProxyFactory
             }
         }
 
-        return new HessianConnection(url, conn);
+        return new HessianConnection(conn);
     }
 
     /**

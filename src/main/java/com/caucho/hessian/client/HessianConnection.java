@@ -53,23 +53,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
 
 import com.caucho.hessian.HessianException;
 
 /**
- * Internal connection to a server.  The default connection is based on
- * java.net
+ * Internal connection to a server.  The default connection is based on java.net
  */
 public class HessianConnection
 {
-    private URL _url;
-    private URLConnection _conn;
+    private HttpURLConnection _conn;
 
-    HessianConnection(URL url, URLConnection conn)
+    HessianConnection(HttpURLConnection conn)
     {
-        _url = url;
         _conn = conn;
     }
     
@@ -95,81 +90,76 @@ public class HessianConnection
      */
     public void sendRequest() throws IOException
     {
-        if (_conn instanceof HttpURLConnection)
-        {
-            HttpURLConnection httpConn = (HttpURLConnection) _conn;
+        int _statusCode = 500;
 
-            int _statusCode = 500;
+        try
+        {
+            _statusCode = _conn.getResponseCode();
+        }
+        catch (Exception e)
+        {
+        }
+
+        parseResponseHeaders(_conn);
+
+        InputStream is = null;
+
+        if (_statusCode != 200)
+        {
+            StringBuffer sb = new StringBuffer();
+            int ch;
 
             try
             {
-                _statusCode = httpConn.getResponseCode();
-            }
-            catch (Exception e)
-            {
-            }
-
-            parseResponseHeaders(httpConn);
-
-            InputStream is = null;
-
-            if (_statusCode != 200)
-            {
-                StringBuffer sb = new StringBuffer();
-                int ch;
-
-                try
-                {
-                    is = httpConn.getInputStream();
-
-                    if (is != null)
-                    {
-                        while ((ch = is.read()) >= 0)
-                        {
-                            sb.append((char) ch);
-                        }
-
-                        is.close();
-                    }
-
-                    is = httpConn.getErrorStream();
-                    if (is != null)
-                    {
-                        while ((ch = is.read()) >= 0)
-                        {
-                            sb.append((char) ch);
-                        }
-                    }
-                }
-                catch (FileNotFoundException e)
-                {
-                    throw new HessianException("HessianProxy cannot connect to '" + _url, e);
-                }
-                catch (IOException e)
-                {
-                    if (is == null)
-                    {
-                        throw new HessianException(_statusCode + ": " + e, e);
-                    }
-                    else
-                    {
-                        throw new HessianException(_statusCode + ": " + sb, e);
-                    }
-                }
+                is = _conn.getInputStream();
 
                 if (is != null)
                 {
+                    while ((ch = is.read()) >= 0)
+                    {
+                        sb.append((char) ch);
+                    }
+
                     is.close();
                 }
 
-                throw new HessianException(_statusCode + ": " + sb.toString());
+                is = _conn.getErrorStream();
+                if (is != null)
+                {
+                    while ((ch = is.read()) >= 0)
+                    {
+                        sb.append((char) ch);
+                    }
+                }
             }
+            catch (FileNotFoundException e)
+            {
+                throw new HessianException("HessianProxy cannot connect to '" + _conn.getURL(), e);
+            }
+            catch (IOException e)
+            {
+                if (is == null)
+                {
+                    throw new HessianException(_statusCode + ": " + e, e);
+                }
+                else
+                {
+                    throw new HessianException(_statusCode + ": " + sb, e);
+                }
+            }
+
+            if (is != null)
+            {
+                is.close();
+            }
+
+            throw new HessianException(_statusCode + ": " + sb.toString());
         }
     }
 
-    protected void parseResponseHeaders(HttpURLConnection conn)
-            throws IOException
+    protected void parseResponseHeaders(HttpURLConnection conn) throws IOException
     {
+        
     }
 
     /**
@@ -192,12 +182,9 @@ public class HessianConnection
      */
     public void destroy()
     {
-        URLConnection conn = _conn;
+        HttpURLConnection conn = _conn;
         _conn = null;
 
-        if (conn instanceof HttpURLConnection)
-        {
-            ((HttpURLConnection) conn).disconnect();
-        }
+        conn.disconnect();
     }
 }
