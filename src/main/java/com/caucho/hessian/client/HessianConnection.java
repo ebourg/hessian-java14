@@ -53,6 +53,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
 
 import com.caucho.hessian.HessianException;
 
@@ -167,7 +169,15 @@ public class HessianConnection
      */
     public InputStream getInputStream() throws IOException
     {
-        return _conn.getInputStream();
+        String contentEncoding = _conn.getContentEncoding();
+        if ("deflate".equals(contentEncoding))
+        {
+            return new InflaterInputStream(_conn.getInputStream(), new Inflater(true));
+        }
+        else
+        {
+            return _conn.getInputStream();
+        }
     }
 
     /**

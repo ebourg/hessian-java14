@@ -299,6 +299,7 @@ public class HessianProxy implements InvocationHandler, Serializable
     protected void addRequestHeaders(HessianConnection conn)
     {
         conn.addHeader("Content-Type", "x-application/hessian");
+        conn.addHeader("Accept-Encoding", "deflate");
 
         String basicAuth = _factory.getBasicAuth();
 
