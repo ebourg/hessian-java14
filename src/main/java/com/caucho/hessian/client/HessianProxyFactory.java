@@ -111,6 +111,8 @@ public class HessianProxyFactory
     private boolean _isHessian2Reply = true;
     private boolean _isHessian2Request = false;
 
+    private boolean _isCompressed = false;
+
     private long _readTimeout = -1;
     private long _connectTimeout = -1;
 
@@ -233,6 +235,19 @@ public class HessianProxyFactory
         {
             _isHessian2Reply = true;
         }
+    }
+
+    /**
+     * True if the proxy should send compressed requests.
+     */
+    public void setCompressed(boolean compressed)
+    {
+        _isCompressed = compressed;
+    }
+
+    public boolean isCompressed()
+    {
+        return _isCompressed;
     }
 
     /**

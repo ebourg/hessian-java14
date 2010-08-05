@@ -57,6 +57,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.WeakHashMap;
+import java.util.zip.Deflater;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.GZIPOutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -269,14 +272,25 @@ public class HessianProxy implements InvocationHandler, Serializable
         try
         {
             addRequestHeaders(conn);
-
+            
             OutputStream os = conn.getOutputStream();
-
+            
+            if (_factory.isCompressed())
+            {
+                Deflater deflater = new Deflater(Deflater.DEFAULT_COMPRESSION, true);
+                os = new DeflaterOutputStream(os, deflater);
+            }            
+            
             AbstractHessianOutput out = _factory.getHessianOutput(os);
 
             out.call(methodName, args);
             out.flush();
-
+            
+            if (os instanceof DeflaterOutputStream)
+            {
+                ((DeflaterOutputStream) os).finish();
+            }
+            
             conn.sendRequest();
 
             isValid = true;
@@ -299,8 +313,13 @@ public class HessianProxy implements InvocationHandler, Serializable
     protected void addRequestHeaders(HessianConnection conn)
     {
         conn.addHeader("Content-Type", "x-application/hessian");
-        conn.addHeader("Accept-Encoding", "deflate");
-
+        
+        if (_factory.isCompressed())
+        {
+            conn.addHeader("Accept-Encoding", "deflate");
+            conn.addHeader("Content-Encoding", "deflate");
+        }
+        
         String basicAuth = _factory.getBasicAuth();
 
         if (basicAuth != null)
