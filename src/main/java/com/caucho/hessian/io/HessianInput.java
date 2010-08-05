@@ -795,20 +795,25 @@ public class HessianInput extends AbstractHessianInput
             case 'M':
             {
                 String type = readType();
-
+                
                 // hessian/3386
                 if ("".equals(type))
                 {
                     Deserializer reader;
                     reader = _serializerFactory.getDeserializer(cl);
-
+                    
                     return reader.readMap(this);
                 }
                 else
                 {
                     Deserializer reader;
                     reader = _serializerFactory.getObjectDeserializer(type);
-
+                    
+                    if (cl == reader.getType() || !cl.isAssignableFrom(reader.getType()))
+                    {
+                        reader = _serializerFactory.getDeserializer(cl);
+                    }
+                    
                     return reader.readMap(this);
                 }
             }
