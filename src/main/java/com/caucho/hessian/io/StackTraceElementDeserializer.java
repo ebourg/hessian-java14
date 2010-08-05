@@ -61,6 +61,48 @@ public class StackTraceElementDeserializer extends AbstractMapDeserializer
         return StackTraceElement.class;
     }
 
+    public Object readMap(AbstractHessianInput in) throws IOException
+    {
+        HashMap map = new HashMap();
+        
+        in.addRef(map);
+        
+        String declaringClass = null;
+        String methodName = null;
+        String fileName = null;
+        int lineNumber = 0;
+        
+        while (!in.isEnd())
+        {
+            String key = in.readString();
+
+            if (key.equals("declaringClass"))
+            {
+                declaringClass = in.readString();
+            }
+            else if (key.equals("methodName"))
+            {
+                methodName = in.readString();
+            }
+            else if (key.equals("fileName"))
+            {
+                fileName = in.readString();
+            }
+            else if (key.equals("lineNumber"))
+            {
+                lineNumber = in.readInt();
+            }
+            else
+            {
+                in.readObject();
+            }
+        }
+        
+        in.readMapEnd();
+        
+        return createStackTraceElement(declaringClass, methodName, fileName, lineNumber);
+    }
+
     public Object readObject(AbstractHessianInput in, Object[] fieldNames) throws IOException
     {
         HashMap map = new HashMap();
@@ -103,17 +145,7 @@ public class StackTraceElementDeserializer extends AbstractMapDeserializer
         ObjectOutputStream oos = new ObjectOutputStream(dos);
 
         oos.writeObject(StackTraceElement.class);
-
-        Throwable e1 = new IOException();
-        try
-        {
-            throw e1;
-        }
-        catch (Throwable e2)
-        {
-            e1 = e2;
-        }
-
+        
         dos.writeByte(ObjectStreamConstants.TC_OBJECT);
         dos.writeByte(ObjectStreamConstants.TC_REFERENCE);
         dos.writeShort(0x007e);
