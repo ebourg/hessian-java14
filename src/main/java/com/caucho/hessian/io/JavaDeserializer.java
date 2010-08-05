@@ -577,7 +577,7 @@ public class JavaDeserializer extends AbstractMapDeserializer
                 throws IOException;
     }
 
-    static class NullFieldDeserializer
+    static class NullFieldDeserializer extends FieldDeserializer
     {
         static NullFieldDeserializer DESER = new NullFieldDeserializer();
 
