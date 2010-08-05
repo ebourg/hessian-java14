@@ -388,11 +388,6 @@ public class HessianProxyFactory
 
     public AbstractHessianInput getHessianInput(InputStream is)
     {
-        return getHessian2Input(is);
-    }
-
-    public AbstractHessianInput getHessian1Input(InputStream is)
-    {
         AbstractHessianInput in = new HessianInput(is);
 
         in.setSerializerFactory(getSerializerFactory());
