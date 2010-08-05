@@ -732,7 +732,7 @@ public class SerializerFactory extends AbstractSerializerFactory
             }
             catch (Exception e)
             {
-                log.warning("Hessian: '" + type + "' is an unknown class in " + _loader + ":\n" + e);
+                log.fine("Hessian: '" + type + "' is an unknown class in " + _loader);
 
                 log.log(Level.FINER, e.toString(), e);
             }
