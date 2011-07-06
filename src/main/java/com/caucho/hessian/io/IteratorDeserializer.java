@@ -25,8 +25,6 @@ public class IteratorDeserializer extends AbstractListDeserializer
     {
         Collection list = new Vector();
 
-        in.addRef(list);
-
         while (!in.isEnd())
         {
             list.add(in.readObject());
