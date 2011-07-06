@@ -339,6 +339,11 @@ public class SerializerFactory extends AbstractSerializerFactory
         {
             return EnumerationSerializer.create();
         }
+        
+        else if (Enums.isEnum(cl))
+        {
+            return new EnumSerializer(cl);
+        }
 
         return getDefaultSerializer(cl);
     }
@@ -475,6 +480,11 @@ public class SerializerFactory extends AbstractSerializerFactory
         else if (Enumeration.class.isAssignableFrom(cl))
         {
             deserializer = EnumerationDeserializer.create();
+        }
+        
+        else if (Enums.isEnum(cl))
+        {
+            deserializer = new EnumDeserializer(cl);
         }
 
         else if (Class.class.equals(cl))
